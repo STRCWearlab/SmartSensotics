@@ -13,7 +13,8 @@ import pychrono.fea as fea
 import pychrono.irrlicht as chronoirr
 import pychrono.mkl as mkl
 from math import pi as PI
-from sleeve import Sleeve
+from sleeve_shellreissner import SleeveShellReissner
+from sleeve_brick import SleeveBrick
 
 print("Cloth Simulation: create and visualize an elastic sleeve around a bumped cylinder")
 
@@ -21,19 +22,23 @@ print("Cloth Simulation: create and visualize an elastic sleeve around a bumped 
 # It must point to the data folder, containing GUI assets (textures, fonts, meshes, etc.)
 chrono.SetChronoDataPath("../data/")
 
-CYLINDER_HEIGHT = 0.2
-CYLINDER_RADIUS = 0.025
+CYLINDER_HEIGHT = 2
+CYLINDER_RADIUS = 0.25
 
-CLOTH_LENGTH = 2 * 3.1415 * CYLINDER_RADIUS
-CLOTH_RADIUS = 2.0 * CYLINDER_RADIUS
+CLOTH_LENGTH = 2 * PI * CYLINDER_RADIUS
+CLOTH_RADIUS = 1.0 * CYLINDER_RADIUS
 HUMAN_DENSITY = 985  # kg/m^3
 EARTH_DENSITY = 5515.3
 ALU_DENSITY = 2810
 
+NSC = False  # NSC = True | SMC = False
+SOLVER_SOR = False  # Solver MKL is more precise for FEA elements. Set False if you want it.
+SET_MATERIAL = False  # True or False to set material property to the rigid bodies
+
 # ---------------------------------------------------------------------
 #
 # Create the simulation system and add items
-mysystem = chrono.ChSystemNSC()
+mysystem = chrono.ChSystemNSC() if NSC else chrono.ChSystemSMC()
 
 # Set the global collision margins. This is especially important for very large or
 # very small objects. Set this before creating shapes. Not before creating mysystem.
@@ -47,10 +52,10 @@ chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.0001)
 
 # Skin smooth contact
 skin_material = chrono.ChMaterialSurfaceSMC()
-skin_material.SetAdhesion(0.0)
-skin_material.SetYoungModulus(0.0)
+skin_material.SetAdhesion(0.01)
+skin_material.SetYoungModulus(0.00007)
 skin_material.SetPoissonRatio(0.0)
-skin_material.SetFriction(0.0)
+skin_material.SetFriction(0.10)
 skin_material.SetRestitution(0.0)
 # Create a skin texture
 skin_texture = chrono.ChTexture()
@@ -59,117 +64,122 @@ skin_texture.SetTextureFilename(chrono.GetChronoDataPath() + 'textures/skin.jpg'
 # Aluminium non-smooth contact
 alu_material = chrono.ChMaterialSurfaceNSC()
 alu_material.SetFriction(0.02)
-alu_material.SetDampingF(0.0)
-alu_material.SetCompliance(0.0000)
-alu_material.SetComplianceT(0.00000)
-alu_material.SetCohesion(0.0)
+alu_material.SetDampingF(0.10)
+alu_material.SetCompliance(0.00001)
+alu_material.SetComplianceT(0.000001)
+alu_material.SetCohesion(0.10)
 alu_material.SetRollingFriction(0.0)
-
-# Create a floor
-mfloor = chrono.ChBodyEasyBox(0.5, 0.05, 0.5, EARTH_DENSITY, True, True)
-mfloor.SetBodyFixed(True)
-#mfloor.SetMaterialSurface(alu_material)
 
 # Create a fixed rigid cylinder
 mcylinder = chrono.ChBodyEasyCylinder(CYLINDER_RADIUS, CYLINDER_HEIGHT,   # radius, height
                                       HUMAN_DENSITY,  # density
-                                      True, True)
+                                      True, True,
+                                      chrono.ChMaterialSurface.NSC if NSC else chrono.ChMaterialSurface.SMC)
 mcylinder.SetBodyFixed(True)
-mcylinder.SetPos(chrono.ChVectorD(0, 0.1, 0))
+mcylinder.SetPos(chrono.ChVectorD(0, 0, 0))
 qCylinder = chrono.Q_from_AngX(90 * chrono.CH_C_DEG_TO_RAD)
 mcylinder.SetRot(qCylinder)
 mcylinder.SetMass(HUMAN_DENSITY*PI*CYLINDER_RADIUS**2*CYLINDER_HEIGHT)
 mcylinder.GetAssets().push_back(skin_texture)
-#mcylinder.SetMaterialSurface(alu_material)
+if SET_MATERIAL:
+    mcylinder.SetMaterialSurface(alu_material if NSC else skin_material)
 
 # Add a bump to the cylinder
 sphere_radius = CYLINDER_RADIUS / 1.1
-msphere = chrono.ChBodyEasySphere(sphere_radius, HUMAN_DENSITY, True, True)  # radius, density
+msphere = chrono.ChBodyEasySphere(sphere_radius, HUMAN_DENSITY, True, True,
+                                  chrono.ChMaterialSurface.NSC if NSC else chrono.ChMaterialSurface.SMC)
 msphere.SetBodyFixed(True)
-msphere.SetPos(chrono.ChVectorD(0, 0.1+CYLINDER_RADIUS*0.4, 0))
+msphere.SetPos(chrono.ChVectorD(0, CYLINDER_RADIUS*0.4, 0))
 msphere.SetMass(HUMAN_DENSITY*(4/3)*PI*sphere_radius**3)
 msphere.GetAssets().push_back(skin_texture)
-#msphere.SetMaterialSurface(alu_material)
+if SET_MATERIAL:
+    msphere.SetMaterialSurface(alu_material if NSC else skin_material)
 
-# Create a falling sphere to test collision
-sphere2_radius = 0.01
-falling_sphere = chrono.ChBodyEasySphere(sphere2_radius, ALU_DENSITY, True, True)
-falling_sphere.SetBodyFixed(False)
-falling_sphere.SetPos(chrono.ChVectorD(0.01, 0.2, 0.0))
-falling_sphere.SetMass(ALU_DENSITY * (4 / 3) * PI * sphere2_radius ** 3)
-#falling_sphere.SetMaterialSurface(alu_material)
-
-mat = falling_sphere.GetMaterialSurfaceBase()
-
-mysystem.Add(mfloor)
 mysystem.Add(mcylinder)
 mysystem.Add(msphere)
-mysystem.Add(falling_sphere)
 
 # ----------------------------------------------
 # Create a drape wrapping the cylinder
 
 # Create a 3D thin mesh
-nnodes_angle = 16  # min 2
-nnodes_length = 4  # min 2
+nnodes_angle = 20  # min 2
+nnodes_length = 20  # min 2
 
 # Create the material property of the mesh
-rho = 0.0
-E = 0.01e9  # rubber
-nu = 0.0
-shear_factor = 0.1
-torque_factor = 0.1
+rho = 1522  # material density
+E = 8e3  # Young's modulus 11e6
+nu = 0.5  # 0.5  # Poisson ratio
+alpha = 10.0  # 0.3  # shear factor
+beta = 0.2  # torque factor
 cloth_material = fea.ChMaterialShellReissnerIsothropic(rho, E, nu,
-                                                       shear_factor, torque_factor)
+                                                       alpha, beta)
+sleeve = SleeveShellReissner(CLOTH_LENGTH, CLOTH_RADIUS, nnodes_angle, nnodes_length,
+                             cloth_material, shift_y=0, shift_z=-CLOTH_LENGTH/2)
 
-sleeve = Sleeve(CLOTH_LENGTH, CLOTH_RADIUS, nnodes_angle, nnodes_length,
-                cloth_material, shift_y=0.1, shift_z=-CLOTH_LENGTH/2)
-cloth_mesh = sleeve.getMesh()
+mat_elastic = chrono.ChContinuumElastic(E, nu, rho)
+#sleeve_brick = SleeveBrick(CLOTH_LENGTH, 2.0*CLOTH_RADIUS, 0.05, 7, 3,
+#                           material=mat_elastic, shift_y=0, shift_z=-CLOTH_LENGTH/2)
+cloth_mesh = sleeve.get_mesh()
+#cloth_mesh_brick = sleeve_brick.get_mesh()
 
 # Add a contact surface mesh
 # Add a material surface
-contact_material = chrono.ChMaterialSurfaceNSC()
-# contact_material.SetYoungModulus(6e4)
-# contact_material.SetFriction(0.3)
-# contact_material.SetRestitution(0.2)
-# contact_material.SetAdhesion(0.0)
+contact_material = chrono.ChMaterialSurfaceSMC()
+#contact_material.SetYoungModulus(11e5)
+contact_material.SetFriction(0.8)
+#contact_material.SetRestitution(0.)
+#contact_material.SetAdhesion(0.9)
+if NSC:
+    contact_material = chrono.ChMaterialSurfaceNSC()
 
-# TODO wait for answer http://projectchrono.org/forum/?place=msg%2Fprojectchrono%2F5b-GatNDPyY%2FMQFKz5yHCQAJ
-sphere_swept_thickness = 0.001
+sphere_swept_thickness = 0.008
 mcontact = fea.ChContactSurfaceMesh()
 cloth_mesh.AddContactSurface(mcontact)
-#mcontact.AddFacesFromBoundary(sphere_swept_thickness)
-#mcontact.SetMaterialSurface(contact_material)
+mcontact.AddFacesFromBoundary(sphere_swept_thickness)
+mcontact.SetMaterialSurface(contact_material)
 
+# Fix the extremities of the sleeve to the cylinder
+sleeve.fix_extremities(mcylinder, mysystem)
+
+# Extend the sleeve. It will be released after some iterations.
+sleeve.extend(10.0)
+
+# ---------------------------------------------------------------------
+# VISUALIZATION
 # ==Asset== attach a visualization of the FEM mesh.
-mvisualizeCloth = fea.ChVisualizationFEAmesh(cloth_mesh)
-mvisualizeCloth.SetSmoothFaces(False)
-mvisualizeCloth.SetFEMdataType(fea.ChVisualizationFEAmesh.E_PLOT_SURFACE)
-mvisualizeCloth.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
-mvisualizeCloth.SetColorscaleMinMax(0.0, 5.0)
-cloth_mesh.AddAsset(mvisualizeCloth)
+#mvisualizeCloth = fea.ChVisualizationFEAmesh(cloth_mesh)
+#mvisualizeCloth.SetSmoothFaces(False)
+#mvisualizeCloth.SetFEMdataType(fea.ChVisualizationFEAmesh.E_PLOT_SURFACE)
+#mvisualizeCloth.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
+#mvisualizeCloth.SetColorscaleMinMax(-5.0, 5.0)
+#cloth_mesh.AddAsset(mvisualizeCloth)
 
 mvisualizeClothcoll = fea.ChVisualizationFEAmesh(cloth_mesh)
 mvisualizeClothcoll.SetWireframe(True)
-mvisualizeClothcoll.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_CSYS)
-mvisualizeClothcoll.SetSymbolsThickness(0.007)
+mvisualizeClothcoll.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
+mvisualizeClothcoll.SetSymbolsThickness(0.02)
 cloth_mesh.AddAsset(mvisualizeClothcoll)
 
+# mvisualizeClothBrick = fea.ChVisualizationFEAmesh(cloth_mesh_brick)
+# mvisualizeClothBrick.SetWireframe(True)
+# mvisualizeClothBrick.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
+# cloth_mesh_brick.AddAsset(mvisualizeClothBrick)
+
 # Add mesh to the system
-cloth_mesh.SetAutomaticGravity(True)
-print('GRAVITY', cloth_mesh.GetAutomaticGravity())
+cloth_mesh.SetAutomaticGravity(False)
 mysystem.AddMesh(cloth_mesh)
+#mysystem.AddMesh(m)
 
 
 # ---------------------------------------------------------------------
-#
+# IRRLICHT
 # Create an Irrlicht application to visualize the system
 #
 myapplication = chronoirr.ChIrrApp(mysystem, 'Cloth Simulation', chronoirr.dimension2du(1024, 768))
 
 myapplication.AddTypicalSky()
 myapplication.AddTypicalLogo(chrono.GetChronoDataPath() + 'logo_pychrono_alpha.png')
-myapplication.AddTypicalCamera(chronoirr.vector3df(0.2, 0.2, 0.3))
+myapplication.AddTypicalCamera(chronoirr.vector3df(1.7, 0.5, 1.5))
 myapplication.AddTypicalLights()
 
 # ==IMPORTANT!== Use this function for adding a ChIrrNodeAsset to all items
@@ -185,18 +195,26 @@ mysystem.SetupInitial()
 
 
 # ---------------------------------------------------------------------
-#
+# SIMULATION
 # Run the simulation
 #
-
+myapplication.SetTimestep(0.001)
 # Change the solver form the default SOR to the MKL Pardiso, more precise for fea.
-#msolver = mkl.ChSolverMKLcsm()
-#mysystem.SetSolver(msolver)
+if SOLVER_SOR is False:
+    msolver = mkl.ChSolverMKLcsm()
+    mysystem.SetSolver(msolver)
+    myapplication.SetTimestep(0.01)
 
-myapplication.SetTimestep(0.003)
-
+step = 0
 while myapplication.GetDevice().run():
     myapplication.BeginScene()
     myapplication.DrawAll()
+    if step == 51:
+        sleeve.release()
+        nn = cloth_mesh.GetNode(0)
+        print(nn)
     myapplication.DoStep()
+    step += 1
+    print('step', step)
+
     myapplication.EndScene()
