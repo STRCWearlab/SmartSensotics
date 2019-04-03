@@ -68,7 +68,7 @@ class SleeveShellReissner:
                 # node = fea.ChNodeFEAxyzD(nodepos)
                 line.append(node)
                 # Add node to mesh
-                node.SetMass(10.0)
+                node.SetMass(1.0)
                 self.mesh.AddNode(node)
 
             self.nodes.append(line)

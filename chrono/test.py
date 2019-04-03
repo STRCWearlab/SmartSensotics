@@ -15,8 +15,18 @@ import pychrono.mkl as mkl
 from math import pi as PI
 from sleeve_shellreissner import SleeveShellReissner
 from sleeve_brick import SleeveBrick
+import numpy as np
 
+a = np.array([1,2,3])
+b = np.array([3,2,1])
+c = np.array([a,b])
+print(c)
+print(c*0.5)
+print(np.linalg.norm(a-b))
 print("Cloth Simulation: create and visualize an elastic sleeve around a bumped cylinder")
+
+node = fea.ChNodeFEAxyzD(chrono.ChVectorD(0,0,0))
+node.SetPos(chrono.ChVectorD(1,1,1))
 
 # Change this path to asset path, if running from other working dir.
 # It must point to the data folder, containing GUI assets (textures, fonts, meshes, etc.)
@@ -35,39 +45,79 @@ chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.0001)
 # ---------------------------------------------------------------------
 # Test brick mesh
 m = fea.ChMesh()
-nA = fea.ChNodeFEAxyz(chrono.ChVectorD(0,0,0))
-nB = fea.ChNodeFEAxyz(chrono.ChVectorD(1,0,0))
-nC = fea.ChNodeFEAxyz(chrono.ChVectorD(1,0,1))
-nD = fea.ChNodeFEAxyz(chrono.ChVectorD(0,0,1))
-nE = fea.ChNodeFEAxyz(chrono.ChVectorD(0,1,0))
-nF = fea.ChNodeFEAxyz(chrono.ChVectorD(1,1,0))
-nG = fea.ChNodeFEAxyz(chrono.ChVectorD(1,1,1))
-nH = fea.ChNodeFEAxyz(chrono.ChVectorD(0,1,1))
+nA = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 0., 0.))
+nB = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 0., 0.))
+nC = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 0., 1.))
+nD = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 0., 1.))
+nE = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 1., 0.))
+nF = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 1., 0.))
+nG = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 1., 1.))
+nH = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 1., 1.))
+# nA.SetMass(10.)
+# nB.SetMass(10.)
+# nC.SetMass(10.)
+# nD.SetMass(10.)
+# nE.SetMass(10.)
+# nF.SetMass(10.)
+# nG.SetMass(10.)
+# nH.SetMass(10.)
 m.AddNode(nA)
 m.AddNode(nB)
 m.AddNode(nC)
 m.AddNode(nD)
-m.AddNode(nE)
-m.AddNode(nF)
-m.AddNode(nG)
-m.AddNode(nH)
-elem = fea.ChElementBrick()
-elem.SetNodes(nA,nB,nC,nD,nE,nF,nG,nH)
+#m.AddNode(nE)
+#m.AddNode(nF)
+#m.AddNode(nG)
+#m.AddNode(nH)
+#elem = fea.ChElementBrick()
+#elem.SetNodes(nA,nB,nC,nD,nE,nF,nG,nH)
 #mat = chrono.ChContinuumElastic()
 #elem.SetMaterial(mat)
-m.AddElement(elem)
+#m.AddElement(elem)
+#b1 = fea.ChElementSpring()
+#b1.SetNodes(nA, nB)
+#b1.SetSpringK(1000)
+#b2 = fea.ChElementSpring()
+#b2.SetNodes(nB, nC)
+#b2.SetSpringK(1000)
+#b3 = fea.ChElementSpring()
+#b3.SetNodes(nC, nD)
+#b3.SetSpringK(1000)
+##b4 = fea.ChElementSpring()
+#b4.SetNodes(nD, nA)
+#b4.SetSpringK(1000)
+#b1.SetBarArea(10.0)
+#b1.SetBarDensity(1000)
+#b2 = fea.ChElementBar()
+#b2.SetNodes(nB, nC)
+#b2.SetBarArea(0.05)
+#b3 = fea.ChElementBar()
+#b3.SetNodes(nC, nD)
+#b3.SetBarArea(0.05)
+#m.AddElement(b1)
+#m.AddElement(b2)
+#m.AddElement(b3)
+#m.AddElement(b4)
 
+nA.SetForce(chrono.ChVectorD(10, 10, 0))
 
 # ---------------------------------------------------------------------
 
 mvisualizeClothBrick = fea.ChVisualizationFEAmesh(m)
 mvisualizeClothBrick.SetWireframe(True)
 mvisualizeClothBrick.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
-#m.AddAsset(mvisualizeClothBrick)
+mvisualizeClothBrick.SetSymbolsThickness(0.1)
+m.AddAsset(mvisualizeClothBrick)
+
+viz = fea.ChVisualizationFEAmesh(m)
+viz.SetWireframe(True)
+viz.SetSmoothFaces(True)
+viz.SetFEMdataType(fea.ChVisualizationFEAmesh.E_PLOT_SURFACE)
+m.AddAsset(viz)
 
 # Add mesh to the system
 mysystem.AddMesh(m)
-
+m.SetAutomaticGravity(False)
 
 # ---------------------------------------------------------------------
 # IRRLICHT
@@ -77,7 +127,7 @@ myapplication = chronoirr.ChIrrApp(mysystem, 'Cloth Simulation', chronoirr.dimen
 
 myapplication.AddTypicalSky()
 myapplication.AddTypicalLogo(chrono.GetChronoDataPath() + 'logo_pychrono_alpha.png')
-myapplication.AddTypicalCamera(chronoirr.vector3df(2,2,2))
+myapplication.AddTypicalCamera()
 myapplication.AddTypicalLights()
 
 # ==IMPORTANT!== Use this function for adding a ChIrrNodeAsset to all items
@@ -91,23 +141,17 @@ myapplication.AssetBindAll()
 myapplication.AssetUpdateAll()
 mysystem.SetupInitial()
 
-
 # ---------------------------------------------------------------------
 # SIMULATION
 # Run the simulation
 #
-myapplication.SetTimestep(0.001)
 # Change the solver form the default SOR to the MKL Pardiso, more precise for fea.
 msolver = mkl.ChSolverMKLcsm()
 mysystem.SetSolver(msolver)
-myapplication.SetTimestep(0.01)
+myapplication.SetTimestep(0.001)
 
-step = 0
 while myapplication.GetDevice().run():
     myapplication.BeginScene()
     myapplication.DrawAll()
     myapplication.DoStep()
-    step += 1
-    print('step', step)
-
     myapplication.EndScene()

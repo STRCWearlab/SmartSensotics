@@ -211,8 +211,6 @@ while myapplication.GetDevice().run():
     myapplication.DrawAll()
     if step == 51:
         sleeve.release()
-        nn = cloth_mesh.GetNode(0)
-        print(nn)
     myapplication.DoStep()
     step += 1
     print('step', step)
