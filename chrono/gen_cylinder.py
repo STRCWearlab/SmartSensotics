@@ -25,6 +25,7 @@ def gen_cylinder(radius, length, na, nl,
     # Nodes
     nodes = []
     edges = []
+    nidx = 0
     print(length)
     for i in range(nl):
         cl = length/(nl-1)*i + shift_z  # current length
@@ -40,26 +41,32 @@ def gen_cylinder(radius, length, na, nl,
 
             # Make edges
             # [left_node, next_angle_node, right_node, previous_angle_node]
-            e = [-1, -1, -1, -1]
+            e = [-1]*4
 
             # Link left
             if i > 0:
-                e[0] = na * (i - 1) + j
+                e[0] = nidx - na
+                #e[0] = na * (i - 1) + j
             # link right
             if i < nl-1:
-                e[2] = na * (i + 1) + j
+                e[2] = nidx + na
+                #e[2] = na * (i + 1) + j
             # link to previous angle
             if j > 0:
-                e[3] = na * i + j - 1
+                e[3] = nidx - 1
+                #e[3] = na * i + j - 1
             else:
-                e[3] = na * (i + 1) - 1
+                e[3] = nidx+(na-1)
+                #e[3] = na * (i + 1) - 1
             # link to next angle
             if j < na-1:
-                e[1] = na * i + j + 1
+                e[1] = nidx+1
+                #e[1] = na * i + j + 1
             else:
-                e[1] = na * i
+                e[1] = nidx-(na-1)
 
             edges.append(e)
+            nidx += 1
 
             #print(f"Node[{i},{j}] {na*i+j} (ca={ca}, cl={cl}) edges: {e[0]} {e[1]} {e[2]} {e[3]}")
 

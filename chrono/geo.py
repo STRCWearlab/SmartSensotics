@@ -13,6 +13,7 @@ def node_force(nodes, edges, idx, rest_len):
     """
     # Compute the current length of the four neighbouring edges of node idx
     cl = edgelen(nodes, edges, idx)
+    print(cl)
 
     # Initiate force vector
     fv = np.zeros(3)
@@ -72,7 +73,7 @@ def edgelen(nodes, edges, idx):
     # Iterate over all edges of the current node
     for i in range(4):
         # If edge exists
-        if edges[idx][i] > 0:
+        if edges[idx][i] >= 0:
             # Coordinate of neighbour node:
             cn = nodes[edges[idx][i]]
 

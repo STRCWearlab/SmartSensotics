@@ -15,7 +15,7 @@ def shapeopt_force(nodes_apx, edges_apx, nodes_t, edges_t):
 
     # Parameters
     nu = .2  # Convergence speed
-    it = 3  # Total iterations
+    it = 2  # Total iterations
 
     nodes_opt = nodes_apx
     fvall = None

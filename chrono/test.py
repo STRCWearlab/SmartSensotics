@@ -17,16 +17,9 @@ from sleeve_shellreissner import SleeveShellReissner
 from sleeve_brick import SleeveBrick
 import numpy as np
 
-a = np.array([1,2,3])
-b = np.array([3,2,1])
-c = np.array([a,b])
-print(c)
-print(c*0.5)
-print(np.linalg.norm(a-b))
-print("Cloth Simulation: create and visualize an elastic sleeve around a bumped cylinder")
-
-node = fea.ChNodeFEAxyzD(chrono.ChVectorD(0,0,0))
-node.SetPos(chrono.ChVectorD(1,1,1))
+# SetPos Not working. Doesnt understand inheritance.
+#node = fea.ChNodeFEAxyzD(chrono.ChVectorD(0,0,0))
+#node.SetPos(chrono.ChVectorD(1,1,1))
 
 # Change this path to asset path, if running from other working dir.
 # It must point to the data folder, containing GUI assets (textures, fonts, meshes, etc.)
@@ -102,8 +95,13 @@ m.AddNode(nD)
 nA.SetForce(chrono.ChVectorD(10, 10, 0))
 
 # ---------------------------------------------------------------------
+# Test importing STL files
+t_mesh = chrono.ChTriangleMeshConnected()
+t_mesh.LoadWavefrontMesh(chrono.GetChronoDataPath() + '/shapes/Rod_40x200.stl')
 
-mvisualizeClothBrick = fea.ChVisualizationFEAmesh(m)
+# ---------------------------------------------------------------------
+
+mvisualizeClothBrick = fea.ChVisualizationFEAmesh()
 mvisualizeClothBrick.SetWireframe(True)
 mvisualizeClothBrick.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
 mvisualizeClothBrick.SetSymbolsThickness(0.1)

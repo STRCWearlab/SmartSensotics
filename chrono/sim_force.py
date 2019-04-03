@@ -28,7 +28,7 @@ CYLINDER_RADIUS = 0.25
 CLOTH_LENGTH = 1.5 * CYLINDER_HEIGHT
 CLOTH_RADIUS = 2.0 * CYLINDER_RADIUS
 
-NA = 20  # Number of nodes in the circumference
+NA = 10  # Number of nodes in the circumference
 NL = 10  # Number of nodes in the length
 
 # ---------------------------------------------------------------------
