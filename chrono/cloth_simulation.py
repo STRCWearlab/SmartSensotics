@@ -206,13 +206,34 @@ if SOLVER_SOR is False:
     myapplication.SetTimestep(0.01)
 
 step = 0
+threshold = 0.0001
 while myapplication.GetDevice().run():
+    #print('step', step)
+
     myapplication.BeginScene()
     myapplication.DrawAll()
+    myapplication.DoStep()
+    myapplication.EndScene()
+
+
     if step == 51:
         sleeve.release()
-    myapplication.DoStep()
-    step += 1
-    print('step', step)
 
-    myapplication.EndScene()
+    # Detect stabilisation of the sleeve
+    # When the sleeve movements aren't significant, we extract the position of the nodes
+    if step % 5 == 1:
+        previous_nodes = sleeve.nodes.copy()
+        sleeve.update_nodes()
+        mean_sd = sleeve.get_sd_nodes(previous_nodes)
+        print(mean_sd)
+        if mean_sd < threshold:
+            # Set reference position of nodes as current position, for all nodes
+            sleeve.update_nodes()
+            target_nodes = sleeve.nodes
+
+
+
+    step += 1
+
+print('target nodes')
+print(target_nodes)

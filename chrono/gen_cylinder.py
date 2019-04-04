@@ -26,7 +26,6 @@ def gen_cylinder(radius, length, na, nl,
     nodes = []
     edges = []
     nidx = 0
-    print(length)
     for i in range(nl):
         cl = length/(nl-1)*i + shift_z  # current length
 

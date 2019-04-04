@@ -28,8 +28,8 @@ CYLINDER_RADIUS = 0.25
 CLOTH_LENGTH = 1.5 * CYLINDER_HEIGHT
 CLOTH_RADIUS = 2.0 * CYLINDER_RADIUS
 
-NA = 10  # Number of nodes in the circumference
-NL = 10  # Number of nodes in the length
+NA = 20  # Number of nodes in the circumference
+NL = 20  # Number of nodes in the length
 
 # ---------------------------------------------------------------------
 #
@@ -45,12 +45,12 @@ for rn in rigid_nodes:
     rigid_mesh.AddNode(fea_node)
 
 # Generate the shape to optimize (cloth)
-cloth_nodes, cloth_edges = gen_cylinder(CLOTH_RADIUS, CLOTH_LENGTH, NA, NL,
-                                        shift_z=-CLOTH_LENGTH / 2)
+cloth_nodes_pos, cloth_edges = gen_cylinder(CLOTH_RADIUS, CLOTH_LENGTH, NA, NL,
+                                            shift_z=-CLOTH_LENGTH / 2)
 
 cloth_mesh = fea.ChMesh()
 cloth_fea_nodes = []
-for cn in cloth_nodes:
+for cn in cloth_nodes_pos:
     fea_node = fea.ChNodeFEAxyzD(chrono.ChVectorD(cn[0], cn[1], cn[2]))
     fea_node.SetMass(0.001)
     cloth_fea_nodes.append(fea_node)
@@ -138,7 +138,7 @@ mysystem.SetSolver(msolver)
 myapplication.SetTimestep(0.001)
 
 step = 0
-current_nodes = cloth_nodes
+current_nodes_pos = cloth_nodes_pos
 while myapplication.GetDevice().run():
     myapplication.BeginScene()
     myapplication.DrawAll()
@@ -147,23 +147,27 @@ while myapplication.GetDevice().run():
     print('Step', step)
     if step < 100:
         # Apply the force optimization algorithm and visualize each iteration
-        updated_nodes, fvall = shapeopt_force(current_nodes, cloth_edges,
-                                       rigid_nodes, rigid_edges)
+        updated_nodes_pos, fvall = shapeopt_force(current_nodes_pos, cloth_edges,
+                                                  rigid_nodes, rigid_edges)
 
         # Update the force vector of the nodes
-        # for fea_n, fv in zip(cloth_fea_nodes, fvall):
+        #for fea_n, fv in zip(cloth_fea_nodes, fvall):
         #     # c_fea_n = fea.CastToChNodeFEAxyzDShared(fea_n)
         #     # print('Could be cast to Node?', c_fea_n.IsNull())
         #     fea_n.SetForce(chrono.ChVectorD(fv[0], fv[1], fv[2]))
 
-        # Update the position of the nodes
-        for fea_n, un in zip(cloth_fea_nodes, updated_nodes):
-            # c_fea_n = fea.CastToChNodeFEAxyzDShared(fea_n)
-            # print('Could be cast to Node?', c_fea_n.IsNull())
+        # Add a node to update the position of the nodes
+        for fea_n, un in zip(cloth_fea_nodes, updated_nodes_pos):
             cloth_mesh.AddNode(
                 fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0], un[1], un[2])))
 
-    current_nodes = updated_nodes
+        # Update the position of the nodes
+        # for fea_n, un in zip(cloth_fea_nodes, updated_nodes_pos):
+        #     # c_fea_n = fea.CastToChNodeFEAxyzDShared(fea_n)
+        #     # print('Could be cast to Node?', c_fea_n.IsNull())
+        #     fea_n.SetPos(chrono.ChVectorD(un[0], un[1], un[2]))
+
+    current_nodes_pos = updated_nodes_pos
 
     step += 1
     myapplication.EndScene()

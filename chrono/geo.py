@@ -13,7 +13,6 @@ def node_force(nodes, edges, idx, rest_len):
     """
     # Compute the current length of the four neighbouring edges of node idx
     cl = edgelen(nodes, edges, idx)
-    print(cl)
 
     # Initiate force vector
     fv = np.zeros(3)

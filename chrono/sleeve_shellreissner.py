@@ -1,6 +1,9 @@
 import pychrono as chrono
 import pychrono.fea as fea
 import math
+import numpy as np
+import gen_cylinder
+import chrono_utils as tool
 
 
 class SleeveShellReissner:
@@ -12,8 +15,10 @@ class SleeveShellReissner:
     MIN_NL = 2  # Minimum number of nodes in the length
     na = 3
     nl = 2
-    nodes = []  # Matrix of nodes
-    elements = []  # Matrix of elements
+    nodes = None  # List of nodes
+    fea_nodes = None
+    edges = None  # list of edges
+    elements = None  # List of elements
     mesh = None
 
     def __init__(self, length, radius, na=MIN_NA, nl=MIN_NL, material=None,
@@ -40,6 +45,9 @@ class SleeveShellReissner:
         if nl < 2:
             raise ValueError(f"Number of nodes in the length must be >= {self.MIN_NL}.")
 
+        self.na = na
+        self.nl = nl
+
         sleeve_thickness = 0.1
         # This is the Rayleigh "alpha" for the stiffness-proportional damping.
         # This assumes damping forces as F=alpha*[Km]*v where [Km] is the stiffness matrix (material part,
@@ -48,86 +56,69 @@ class SleeveShellReissner:
         # supported.
         alphadamp = 0.1  #
 
+        # Create the nodes and edges
+        self.nodes, self.edges = gen_cylinder.gen_cylinder(radius, length, na, nl,
+                                                           shift_x, shift_y, shift_z)
+
         # Create the mesh made of nodes and elements
         self.mesh = fea.ChMesh()
 
-        # Nodes
-        for i in range(nl):
-            line = []
-            for j in range(na):
-                # Make nodes
-                ca = j / na * 2. * math.pi  # current angle in radians
-                x = radius * math.cos(ca) + shift_x
-                y = radius * math.sin(ca) + shift_y
-                z = i / (nl - 1) * length + shift_z
+        # Create FEA nodes
+        self.fea_nodes = []
+        for n in self.nodes:
+            nodepos = tool.make_ChVectorD(n)
+            noderot = chrono.ChQuaternionD(chrono.QUNIT)
+            node = fea.ChNodeFEAxyzrot(chrono.ChFrameD(nodepos, noderot))
+            node.SetMass(1)
+            self.fea_nodes.append(node)
+            self.mesh.AddNode(node)
 
-                nodepos = chrono.ChVectorD(x, y, z)
-                noderot = chrono.ChQuaternionD(chrono.QUNIT)  # TODO maybe rotate
-                node = fea.ChNodeFEAxyzrot(chrono.ChFrameD(nodepos, noderot))
-
-                # node = fea.ChNodeFEAxyzD(nodepos)
-                line.append(node)
-                # Add node to mesh
-                node.SetMass(1.0)
-                self.mesh.AddNode(node)
-
-            self.nodes.append(line)
-
-        # Elements
+        # Create FEA elements
+        self.elements = []
         for i in range(nl - 1):
-            line = []
             for j in range(na):
 
                 # Make elements
                 elem = fea.ChElementShellReissner4()
-                # elem = fea.ChElementShellANCF()
 
                 if j == na - 1:
                     # Connect last nodes to the first ones
                     elem.SetNodes(
-                        self.nodes[i + 1][j],  # top right
-                        self.nodes[i][j],  # top left
-                        self.nodes[i][0],  # bottom left
-                        self.nodes[i + 1][0]  # bottom right
+                        self.fea_nodes[(i+1)*na],  # top right
+                        self.fea_nodes[i*na],  # top left
+                        self.fea_nodes[j+i*na],  # bottom left
+                        self.fea_nodes[j+(i+1)*na]  # bottom right
                     )
                 else:
                     elem.SetNodes(
-                        self.nodes[i + 1][j],  # top right
-                        self.nodes[i][j],  # top left
-                        self.nodes[i][j + 1],  # bottom left
-                        self.nodes[i + 1][j + 1]  # bottom right
+                        self.fea_nodes[j+1+(i+1)*na],  # top right
+                        self.fea_nodes[j+1+i*na],  # top left
+                        self.fea_nodes[j+i*na],  # bottom left
+                        self.fea_nodes[j+(i+1)*na]  # bottom right
                     )
                 if material:
                     elem.AddLayer(sleeve_thickness, 0 * chrono.CH_C_DEG_TO_RAD, material)
                     elem.SetAlphaDamp(alphadamp)
 
-                line.append(elem)
                 self.mesh.AddElement(elem)
-
-            self.elements.append(line)
-
-        self.na = na
-        self.nl = nl
+                self.elements.append(elem)
 
     def get_mesh(self):
         return self.mesh
 
     def fix_extremities(self, body, system):
         """
-        Fix the extremities of the sleeve to the left and/or right side of the body
+        Fix the extremities of the sleeve to the left and right side of the body
 
         :param body: a ChBody where the nodes of the sleeve will be fixed
-        :param left: if True, fix the left part of the sleeve to the left part of the body
-        :param right: if True, fix the right part of the sleeve to the right part of the body
+        :param system:
         :return:
         """
-        for i in range(self.na):
-            for j in [0, self.nl-1]:
-                constr = chrono.ChLinkMateGeneric()
-                node = self.nodes[j][i]
-                constr.Initialize(node, body, False, node.Frame(), node.Frame())
-                system.Add(constr)
-                constr.SetConstrainedCoords(True, True, True, True, True, True)
+        for fn in self.fea_nodes[:self.na] + self.fea_nodes[self.na*(self.nl-1):]:
+            constr = chrono.ChLinkMateGeneric()
+            constr.Initialize(fn, body, False, fn.Frame(), fn.Frame())
+            system.Add(constr)
+            constr.SetConstrainedCoords(True, True, True, True, True, True)
 
     def extend(self, force):
         """
@@ -144,13 +135,26 @@ class SleeveShellReissner:
                                             )
             for j in range(self.nl):
                 # Apply a force towards the outside of the sleeve
-                self.nodes[j][i].SetForce(force_vector)
+                self.fea_nodes[j*self.na+i].SetForce(force_vector)
+
+    def update_nodes(self):
+        for i, fn in enumerate(self.fea_nodes):
+            pos = eval(str(fn.GetPos()))
+            self.nodes[i] = pos
 
     def release(self):
         """
         Release the forces of the nodes by setting the force to 0
         :return:
         """
-        for i in range(self.na):
-            for j in range(self.nl):
-                self.nodes[j][i].SetForce(chrono.ChVectorD(0., 0., 0.))
+        for fn in self.fea_nodes:
+            fn.SetForce(chrono.ChVectorD(0., 0., 0.))
+
+    def get_sd_nodes(self, previous_nodes):
+        dist = []
+        for pn, cn in zip(previous_nodes, self.nodes):
+            dist.append(np.linalg.norm(pn-cn))
+        #print(sum(dist))
+        return sum(dist)/len(previous_nodes)
+
+

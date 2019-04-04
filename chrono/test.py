@@ -16,10 +16,24 @@ from math import pi as PI
 from sleeve_shellreissner import SleeveShellReissner
 from sleeve_brick import SleeveBrick
 import numpy as np
+from matplotlib import pyplot
+from mpl_toolkits.mplot3d import Axes3D
 
 # SetPos Not working. Doesnt understand inheritance.
 #node = fea.ChNodeFEAxyzD(chrono.ChVectorD(0,0,0))
 #node.SetPos(chrono.ChVectorD(1,1,1))
+
+# cyl = np.loadtxt(chrono.GetChronoDataPath() + 'shapes/cyl_sleeve.XYZ')
+#
+# x = cyl[:,0]
+# y = cyl[:,1]
+# z = cyl[:,2]
+#
+# fig = pyplot.figure()
+# ax = Axes3D(fig)
+# ax.scatter(x,y,z)
+# pyplot.show()
+
 
 # Change this path to asset path, if running from other working dir.
 # It must point to the data folder, containing GUI assets (textures, fonts, meshes, etc.)
@@ -29,6 +43,7 @@ chrono.SetChronoDataPath("../data/")
 #
 # Create the simulation system and add items
 mysystem = chrono.ChSystemSMC()
+mysystem.Set_G_acc(chrono.ChVectorD(0,0,0))
 
 # Set the global collision margins. This is especially important for very large or
 # very small objects. Set this before creating shapes. Not before creating mysystem.
@@ -37,15 +52,15 @@ chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.0001)
 
 # ---------------------------------------------------------------------
 # Test brick mesh
-m = fea.ChMesh()
-nA = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 0., 0.))
-nB = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 0., 0.))
-nC = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 0., 1.))
-nD = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 0., 1.))
-nE = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 1., 0.))
-nF = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 1., 0.))
-nG = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 1., 1.))
-nH = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 1., 1.))
+# m = fea.ChMesh()
+# nA = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 0., 0.))
+# nB = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 0., 0.))
+# nC = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 0., 1.))
+# nD = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 0., 1.))
+# nE = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 1., 0.))
+# nF = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 1., 0.))
+# nG = fea.ChNodeFEAxyz(chrono.ChVectorD(1., 1., 1.))
+# nH = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 1., 1.))
 # nA.SetMass(10.)
 # nB.SetMass(10.)
 # nC.SetMass(10.)
@@ -54,10 +69,10 @@ nH = fea.ChNodeFEAxyz(chrono.ChVectorD(0., 1., 1.))
 # nF.SetMass(10.)
 # nG.SetMass(10.)
 # nH.SetMass(10.)
-m.AddNode(nA)
-m.AddNode(nB)
-m.AddNode(nC)
-m.AddNode(nD)
+# m.AddNode(nA)
+# m.AddNode(nB)
+# m.AddNode(nC)
+# m.AddNode(nD)
 #m.AddNode(nE)
 #m.AddNode(nF)
 #m.AddNode(nG)
@@ -92,30 +107,35 @@ m.AddNode(nD)
 #m.AddElement(b3)
 #m.AddElement(b4)
 
-nA.SetForce(chrono.ChVectorD(10, 10, 0))
+#nA.SetForce(chrono.ChVectorD(10, 10, 0))
 
 # ---------------------------------------------------------------------
 # Test importing STL files
-t_mesh = chrono.ChTriangleMeshConnected()
-t_mesh.LoadWavefrontMesh(chrono.GetChronoDataPath() + '/shapes/Rod_40x200.stl')
+truss = chrono.ChBody()
+truss.SetMass(100)
+mysystem.Add(truss)
+truss_mesh = chrono.ChObjShapeFile()
+truss_mesh.SetFilename(chrono.GetChronoDataPath() + 'shapes/Sleeve_42x200.stl')
+#truss_mesh.SetFilename(chrono.GetChronoDataPath() + 'shapes/Rod_40x200.stl')
+truss.AddAsset(truss_mesh)
+
 
 # ---------------------------------------------------------------------
+# mvisualizeClothBrick = fea.ChVisualizationFEAmesh(t_mesh)
+# mvisualizeClothBrick.SetWireframe(True)
+# mvisualizeClothBrick.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
+# mvisualizeClothBrick.SetSymbolsThickness(0.1)
+# m.AddAsset(mvisualizeClothBrick)
 
-mvisualizeClothBrick = fea.ChVisualizationFEAmesh()
-mvisualizeClothBrick.SetWireframe(True)
-mvisualizeClothBrick.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
-mvisualizeClothBrick.SetSymbolsThickness(0.1)
-m.AddAsset(mvisualizeClothBrick)
-
-viz = fea.ChVisualizationFEAmesh(m)
-viz.SetWireframe(True)
-viz.SetSmoothFaces(True)
-viz.SetFEMdataType(fea.ChVisualizationFEAmesh.E_PLOT_SURFACE)
-m.AddAsset(viz)
+# viz = fea.ChVisualizationFEAmesh(m)
+# viz.SetWireframe(True)
+# viz.SetSmoothFaces(True)
+# viz.SetFEMdataType(fea.ChVisualizationFEAmesh.E_PLOT_SURFACE)
+# m.AddAsset(viz)
 
 # Add mesh to the system
-mysystem.AddMesh(m)
-m.SetAutomaticGravity(False)
+# mysystem.AddMesh(m)
+# m.SetAutomaticGravity(False)
 
 # ---------------------------------------------------------------------
 # IRRLICHT
@@ -125,7 +145,7 @@ myapplication = chronoirr.ChIrrApp(mysystem, 'Cloth Simulation', chronoirr.dimen
 
 myapplication.AddTypicalSky()
 myapplication.AddTypicalLogo(chrono.GetChronoDataPath() + 'logo_pychrono_alpha.png')
-myapplication.AddTypicalCamera()
+myapplication.AddTypicalCamera(chronoirr.vector3df(0.3, 0., 0.3))
 myapplication.AddTypicalLights()
 
 # ==IMPORTANT!== Use this function for adding a ChIrrNodeAsset to all items
