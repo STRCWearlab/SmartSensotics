@@ -22,17 +22,24 @@ class SleeveShellReissner:
     mesh = None
 
     def __init__(self, length, radius, na=MIN_NA, nl=MIN_NL, material=None,
+                 node_mass=10., sleeve_thickness=0.1, alphadamp=0.1,
                  shift_x=0, shift_y=0, shift_z=0):
         """
         Initialize a 3D cylinder mesh made of na x nl nodes.
         This forms the skeleton of the sleeve.
-
 
         :param length: the length of the sleeve
         :param radius: the radius of the sleeve
         :param na: number of nodes in the circumference
         :param nl: number of nodes in the length
         :param material: a fea.ChMaterialShellReissner material property of the mesh
+        :param node_mass: mass of the node
+        :param sleeve_thickness: Thickness of the sleeve
+        :param alphadamp This is the Rayleigh "alpha" for the stiffness-proportional damping.
+        This assumes damping forces as F=alpha*[Km]*v where [Km] is the stiffness matrix (material part,
+        i.e.excluding geometric stiffness) and v is a vector of node speeds. Usually,
+        alpha in the range 0.0 - 0.1 Note that the mass-proportional term of classical Rayleigh damping is not
+        supported.
         :param shift_x: the sleeve displacement from the origin on x axis
         :param shift_y: the sleeve displacement from the origin on y axis
         :param shift_z: the sleeve displacement from the origin on z axis
@@ -48,14 +55,6 @@ class SleeveShellReissner:
         self.na = na
         self.nl = nl
 
-        sleeve_thickness = 0.1
-        # This is the Rayleigh "alpha" for the stiffness-proportional damping.
-        # This assumes damping forces as F=alpha*[Km]*v where [Km] is the stiffness matrix (material part,
-        # i.e.excluding geometric stiffness) and v is a vector of node speeds. Usually,
-        # alpha in the range 0.0 - 0.1 Note that the mass-proportional term of classical Rayleigh damping is not
-        # supported.
-        alphadamp = 0.1  #
-
         # Create the nodes and edges
         self.nodes, self.edges = gen_cylinder.gen_cylinder(radius, length, na, nl,
                                                            shift_x, shift_y, shift_z)
@@ -69,7 +68,7 @@ class SleeveShellReissner:
             nodepos = tool.make_ChVectorD(n)
             noderot = chrono.ChQuaternionD(chrono.QUNIT)
             node = fea.ChNodeFEAxyzrot(chrono.ChFrameD(nodepos, noderot))
-            node.SetMass(1)
+            node.SetMass(node_mass)
             self.fea_nodes.append(node)
             self.mesh.AddNode(node)
 

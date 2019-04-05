@@ -39,6 +39,23 @@ from mpl_toolkits.mplot3d import Axes3D
 # It must point to the data folder, containing GUI assets (textures, fonts, meshes, etc.)
 chrono.SetChronoDataPath("../data/")
 
+# Preprocess obj file to change millimeters to meters
+f_mm = open(chrono.GetChronoDataPath()+'shapes/cyl30_mm.obj', 'w+')
+with open(chrono.GetChronoDataPath()+'shapes/cyl30.obj') as f:
+    for line in f:
+        res = line
+        if line.startswith('v'):
+            values = line.split(' ')
+            xyz = np.array(values[1:], dtype=np.float)
+            print(xyz)
+            ## Change millimeters to meters
+            xyz *= 0.001
+            res = values[0] + " " + " ".join([str(val) for val in xyz]) + '\n'
+            print(res)
+        f_mm.write(res)
+f_mm.close()
+
+
 # ---------------------------------------------------------------------
 #
 # Create the simulation system and add items

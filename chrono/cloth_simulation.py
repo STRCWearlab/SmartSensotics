@@ -113,7 +113,11 @@ alpha = 10.0  # 0.3  # shear factor
 beta = 0.2  # torque factor
 cloth_material = fea.ChMaterialShellReissnerIsothropic(rho, E, nu,
                                                        alpha, beta)
+node_mass = 10.
+sleeve_thickness = 0.1
+alphadamp = 0.1
 sleeve = SleeveShellReissner(CLOTH_LENGTH, CLOTH_RADIUS, nnodes_angle, nnodes_length,
+                             node_mass, sleeve_thickness, alphadamp,
                              cloth_material, shift_y=0, shift_z=-CLOTH_LENGTH/2)
 
 mat_elastic = chrono.ChContinuumElastic(E, nu, rho)
