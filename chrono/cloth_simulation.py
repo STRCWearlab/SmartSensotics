@@ -146,7 +146,7 @@ mcontact.SetMaterialSurface(contact_material)
 sleeve.fix_extremities(mcylinder, mysystem)
 
 # Extend the sleeve. It will be released after some iterations.
-sleeve.extend(10.0)
+sleeve.expand(10.0)
 
 # ---------------------------------------------------------------------
 # VISUALIZATION
