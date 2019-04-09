@@ -11,7 +11,7 @@ The shapes files are named `{SHAPE_TYPE}_PARAM[_PARAM].obj` where `SHAPE_TYPE` i
 
 | SHAPE_TYPE | Description | PARAM | Example |
 |---|---|---|---|
-| DE | Double Ellipsis  | r1 (common radius), r2 (bottom), r3 (upper) in [mm] | DE_12_7_8.obj |
+| DE | Double Ellipsis  | r1_r2_r3_cylradius_cylthickness in [mm] | DE_12_7_8.obj |
 
 ## ProjectChrono
 
