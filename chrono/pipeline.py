@@ -31,11 +31,11 @@ print("Cloth Simulation: Pipeline for the smartsensotics project")
 chrono.SetChronoDataPath("../data/")
 
 # Set global variables
-NNODES_ANGLE = 12  # number of nodes in the circumference of the sleeve
+NNODES_ANGLE = 10  # number of nodes in the circumference of the sleeve
 NNODES_LENGTH = 12  # number of nodes in the length of the sleeve
-#SHAPE_PATH = 'shapes/cyl30a.obj'
-#SHAPE_PATH = 'shapes/Cyl_30_bump.obj'
-#SHAPE_PATH = 'shapes/Ellipse_64_270_twist.obj'
+# SHAPE_PATH = 'shapes/cyl30a.obj'
+# SHAPE_PATH = 'shapes/Cyl_30_bump.obj'
+# SHAPE_PATH = 'shapes/Ellipse_64_270_twist.obj'
 SHAPE_PATH = 'shapes/DE/DE_35_25_35.obj'
 
 TYPE = 'SMC'  # SMC (Smooth contact, for fea) | NSC (non-smooth contact, for solids)
@@ -67,6 +67,7 @@ chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.0001)
 # Change the millimeters units into meters
 filepath = tool.obj_from_millimeter(chrono.GetChronoDataPath() + SHAPE_PATH, UNIT_FACTOR, "_meters")
 
+# Import the shape
 shape = chrono.ChBody(contact_method)
 shape.SetDensity(HUMAN_DENSITY)
 shape.SetBodyFixed(True)
@@ -75,13 +76,14 @@ shape_mesh.SetFilename(filepath)
 shape.AddAsset(shape_mesh)
 tmc = chrono.ChTriangleMeshConnected()
 tmc.LoadWavefrontMesh(filepath)
+# Add a collision mesh to the shape
 shape.GetCollisionModel().ClearModel()
 shape.GetCollisionModel().AddTriangleMesh(tmc, True, True)
 shape.GetCollisionModel().BuildModel()
 shape.SetShowCollisionMesh(True)
 shape.SetCollide(False)
 
-# Get shape measures
+# Get shape dimensions
 bbmin = chrono.ChVectorD()
 bbmax = chrono.ChVectorD()
 shape.GetTotalAABB(bbmin, bbmax)
@@ -89,9 +91,13 @@ bbmin = eval(str(bbmin))
 bbmax = eval(str(bbmax))
 shape_length = bbmax[2] - bbmin[2]
 shape_diameter = bbmax[0] - bbmin[0]
-shape.SetMass(10*HUMAN_DENSITY*PI*(shape_diameter/2.)**2*shape_length)
+shape.SetMass(10 * HUMAN_DENSITY * PI * (shape_diameter / 2.) ** 2 * shape_length)
 
-print(bbmin, bbmax)
+# Get shape parameters
+all = SHAPE_PATH.split('/')[-1].split('.')[0].split('_')
+params = all[1:]
+cyl_radius = float(params[-1]) * UNIT_FACTOR
+
 # Move shape to the center
 shape.SetPos(chrono.ChVectorD(-shape_diameter / 2. - bbmin[0],
                               -shape_diameter / 2. - bbmin[1],
@@ -122,10 +128,11 @@ print("Create the wrapping sleeve")
 rho = 152.2  # material density
 E = 8e4  # Young's modulus 11e6
 nu = 0.5  # 0.5  # Poisson ratio
-alpha = 1.  # 0.3  # shear factor
+alpha = 1.0  # 0.3  # shear factor
 beta = 0.2  # torque factor
 cloth_material = fea.ChMaterialShellReissnerIsothropic(rho, E, nu,
                                                        alpha, beta)
+
 cloth_length = shape_length
 cloth_radius = 0.7 * shape_diameter / 2.0  # TODO make the mesh smaller than the shape
 node_mass = 0.1
@@ -140,7 +147,7 @@ cloth_mesh = sleeve.get_mesh()
 # Add a material surface
 contact_material = chrono.ChMaterialSurfaceSMC()
 # contact_material.SetYoungModulus(11e5)
-contact_material.SetFriction(0.8)
+contact_material.SetFriction(0.2)
 # contact_material.SetRestitution(0.)
 # contact_material.SetAdhesion(0.9)
 if TYPE == 'NSC':
@@ -152,17 +159,17 @@ cloth_mesh.AddContactSurface(mcontact)
 mcontact.AddFacesFromBoundary(sphere_swept_thickness)
 mcontact.SetMaterialSurface(contact_material)
 
-# TODO move the extremities of the sleeve to the extremities of the shape
+# Move the extremities of the sleeve to the extremities of the shape which is made of 2 cylinders
 # Compute extremities of the shape
-sleeve.move_to_extremities(shape_diameter/2., shape_diameter/2.)
+print('cyl_radius', cyl_radius)
+sleeve.move_to_extremities(cyl_radius, cyl_radius)
 
 # Fix the extremities of the sleeve to the cylinder
 sleeve.fix_extremities(shape, mysystem)
 
 # Extend the sleeve. It will be released after some iterations.
-sleeve.expand(10000000. * UNIT_FACTOR * 1/(NNODES_ANGLE * NNODES_LENGTH)
+sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 4000000. * UNIT_FACTOR
               * shape_diameter)
-
 
 # ---------------------------------------------------------------------
 # FORCE DIRECT: Prepare the shapes for inverse modelling
@@ -171,9 +178,9 @@ sleeve.expand(10000000. * UNIT_FACTOR * 1/(NNODES_ANGLE * NNODES_LENGTH)
 rigid_mesh = fea.ChMesh()
 
 # Generate the shape to optimize (cloth)
-cloth_nodes_pos, cloth_edges = gen_cylinder(shape_diameter, 1.2*shape_length,
+cloth_nodes_pos, cloth_edges = gen_cylinder(shape_diameter, 1.2 * shape_length,
                                             NNODES_ANGLE, NNODES_LENGTH,
-                                            shift_z=-1.2*shape_length/2.)
+                                            shift_z=-1.2 * shape_length / 2.)
 cloth_mesh_apx = fea.ChMesh()
 cloth_fea_nodes = []
 for cn in cloth_nodes_pos:
@@ -182,13 +189,12 @@ for cn in cloth_nodes_pos:
     cloth_fea_nodes.append(fea_node)
     cloth_mesh_apx.AddNode(fea_node)
 
-
 # # ---------------------------------------------------------------------
 # # VISUALIZATION
 mvisualizeClothcoll = fea.ChVisualizationFEAmesh(cloth_mesh)
 mvisualizeClothcoll.SetWireframe(True)
 mvisualizeClothcoll.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
-mvisualizeClothcoll.SetSymbolsThickness(1.*UNIT_FACTOR)
+mvisualizeClothcoll.SetSymbolsThickness(1. * UNIT_FACTOR)
 cloth_mesh.AddAsset(mvisualizeClothcoll)
 
 viz_cloth = fea.ChVisualizationFEAmesh(cloth_mesh_apx)
@@ -198,7 +204,7 @@ viz_cloth.SetSymbolsThickness(0.005)
 cloth_mesh_apx.AddAsset(viz_cloth)
 
 # Add mesh to the system
-#cloth_mesh.SetAutomaticGravity(False)
+# cloth_mesh.SetAutomaticGravity(False)
 mysystem.AddMesh(cloth_mesh)
 mysystem.AddMesh(cloth_mesh_apx)
 #
@@ -210,9 +216,9 @@ myapplication = chronoirr.ChIrrApp(mysystem, 'Cloth Simulation', chronoirr.dimen
 
 myapplication.AddTypicalSky()
 myapplication.AddTypicalLogo(chrono.GetChronoDataPath() + 'logo_pychrono_alpha.png')
-myapplication.AddTypicalCamera(chronoirr.vector3df(shape_length, shape_length/2., shape_length/2.))
+myapplication.AddTypicalCamera(chronoirr.vector3df(shape_length, shape_length / 2., shape_length / 2.))
 myapplication.AddTypicalLights()
-#myapplication.SetVideoframeSave(True)
+# myapplication.SetVideoframeSave(True)
 
 # ==IMPORTANT!== Use this function for adding a ChIrrNodeAsset to all items
 # in the system. These ChIrrNodeAsset assets are 'proxies' to the Irrlicht meshes.
@@ -238,7 +244,7 @@ if SOLVER == 'MKL':
 
 step = 0
 im_step = 0  # inverse modelling steps
-threshold = 0.0001  # minimum value to detect stabilization
+threshold = 0.00005  # minimum value to detect stabilization
 is_inverse_modeling = False
 is_detecting_stab = True
 current_cloth_nodes_pos = cloth_nodes_pos.copy()
@@ -250,7 +256,7 @@ while myapplication.GetDevice().run():
     myapplication.DoStep()
     myapplication.EndScene()
 
-    if step == 50:
+    if step == int(NNODES_ANGLE * NNODES_LENGTH /3):
         sleeve.release()
         shape.SetCollide(True)
 
@@ -262,13 +268,9 @@ while myapplication.GetDevice().run():
 
         # Set reference position of nodes as current position, for all nodes
         print('before', sleeve.nodes[31], sleeve.fea_nodes[31].GetPos())
-        print('fea node base', cloth_mesh.GetNode(31).NodeGetOffset_x())
-        sleeve.update_nodes(cloth_mesh)
+        # print('fea node base', cloth_mesh.GetNode(31).NodeGetOffset_x())
+        sleeve.update_nodes()
         print('after', sleeve.nodes[31], sleeve.fea_nodes[31].GetPos())
-
-
-        for i in range(sleeve.get_nnodes()):
-            print(fea.CastToChNodeFEAxyzrotShared(cloth_mesh.GetNode(i)).GetPos())
 
         mean_sd = sleeve.get_sd_nodes(previous_nodes)
         print(mean_sd)
@@ -285,9 +287,8 @@ while myapplication.GetDevice().run():
             is_detecting_stab = False
             sleeve.freeze()
             myapplication.SetTimestep(0.1)
-            shape.GetAssets().pop()
-            shape.GetAssets().pop()
-
+            #shape.GetAssets().pop()
+            #shape.GetAssets().pop()
 
     if is_inverse_modeling and len(target_nodes) > 0:
 

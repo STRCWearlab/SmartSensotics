@@ -146,7 +146,6 @@ class SleeveShellReissner:
             i += 1
 
     def move_to_extremities(self, radius_left, radius_right):
-        i = 0
         self.move(self.fea_nodes[:self.na],
                   self.nodes[:self.na],
                   radius_left)
@@ -166,29 +165,15 @@ class SleeveShellReissner:
             fv_x = math.cos(ca) * force
             fv_y = math.sin(ca) * force
             for j in range(self.nl):
-                # if j == 0 or j==self.nl-1:
-                #     val = (j) - ((self.nl-1) / 2.)
-                #     fv_z = val*2 * force * 0.02
-                #     #fv_x *= 0.4
-                #     #fv_y *= 0.4
-                #     #fv_z = self.nodes[i + j*self.na][2] * (force*0.12)
-                # else:
-                #     fv_z = 0.
-                fv_z = 0
-                print(j, fv_z)
+                fv_z = 0.
                 force_vector = chrono.ChVectorD(fv_x, fv_y, fv_z)
                 # Apply a force towards the outside of the sleeve
                 self.fea_nodes[j * self.na + i].SetForce(force_vector)
 
-    def update_nodes(self, mesh):
+    def update_nodes(self):
         for i, fn in enumerate(self.fea_nodes):
             pos = eval(str(fn.GetPos()))
             self.nodes[i] = pos
-
-        #for i in range(len(self.fea_nodes)):
-        #    n = mesh.GetNode(i)
-        #    pos = eval(str(n.GetPos()))
-        #    self.nodes[i] = pos
 
     def get_nnodes(self):
         """
