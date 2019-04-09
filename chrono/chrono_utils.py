@@ -43,4 +43,4 @@ def obj_from_millimeter(filepath, unit_factor, filename_suffix):
 def get_cylinder_radius(shape_type, params):
     if shape_type == 'DE':
         return int(params[-2])
-    return None
+    return int(params[-2])

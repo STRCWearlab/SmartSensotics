@@ -23,6 +23,7 @@ import chrono_utils as tool
 from gen_cylinder import gen_cylinder
 from shapeopt_force import shapeopt_force
 import numpy as np
+import math
 
 print("Cloth Simulation: Pipeline for the smartsensotics project")
 
@@ -31,12 +32,12 @@ print("Cloth Simulation: Pipeline for the smartsensotics project")
 chrono.SetChronoDataPath("../data/")
 
 # Set global variables
-NNODES_ANGLE = 12  # number of nodes in the circumference of the sleeve
-NNODES_LENGTH = 12  # number of nodes in the length of the sleeve
-# SHAPE_PATH = 'shapes/cyl30a.obj'
-# SHAPE_PATH = 'shapes/Cyl_30_bump.obj'
-# SHAPE_PATH = 'shapes/Ellipse_64_270_twist.obj'
+NNODES_ANGLE = 30  # number of nodes in the circumference of the sleeve
+NNODES_LENGTH = 14  # number of nodes in the length of the sleeve
 SHAPE_PATH = 'shapes/DE/DE_35_35_25_30_15.obj'
+#SHAPE_PATH = 'shapes/Ellipse_64_270_twist_25_15.obj'
+#SHAPE_PATH = 'shapes/Cyl_30_bump_30_0.obj'
+
 
 TYPE = 'SMC'  # SMC (Smooth contact, for fea) | NSC (non-smooth contact, for solids)
 SOLVER = 'MKL'  # MKL (more precise for FEA elements) | '' (default one)
@@ -99,8 +100,8 @@ cyl_radius = tool.get_cylinder_radius(all[0], all[1:]) * UNIT_FACTOR
 
 # Move shape to the center
 print(bbmin, bbmax)
-shape.SetPos(chrono.ChVectorD(-(bbmax[0]-bbmin[0])/2 + bbmin[0],
-                              -(bbmax[1]-bbmin[1])/2 + bbmin[1],
+shape.SetPos(chrono.ChVectorD(-(bbmax[0]-bbmin[0])/2 - bbmin[0],
+                              -(bbmax[1]-bbmin[1])/2 - bbmin[1],
                               -shape_length / 2. - bbmin[2]))
 shape.SyncCollisionModels()
 mysystem.Add(shape)
@@ -166,7 +167,7 @@ sleeve.move_to_extremities(cyl_radius, cyl_radius)
 sleeve.fix_extremities(shape, mysystem)
 
 # Extend the sleeve. It will be released after some iterations.
-sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 8000000. * UNIT_FACTOR
+sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 2000000. * UNIT_FACTOR
               * shape_diameter)
 
 # ---------------------------------------------------------------------
@@ -242,7 +243,7 @@ if SOLVER == 'MKL':
 
 step = 0
 im_step = 0  # inverse modelling steps
-threshold = 0.00005  # minimum value to detect stabilization
+threshold = 0.00008  # minimum value to detect stabilization
 is_inverse_modeling = False
 is_detecting_stab = True
 current_cloth_nodes_pos = cloth_nodes_pos.copy()
@@ -285,8 +286,8 @@ while myapplication.GetDevice().run():
             is_detecting_stab = False
             sleeve.freeze()
             myapplication.SetTimestep(0.1)
-            #shape.GetAssets().pop()
-            #shape.GetAssets().pop()
+            shape.GetAssets().pop()
+            shape.GetAssets().pop()
 
     if is_inverse_modeling and len(target_nodes) > 0:
 
