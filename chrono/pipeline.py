@@ -32,11 +32,11 @@ print("Cloth Simulation: Pipeline for the smartsensotics project")
 chrono.SetChronoDataPath("../data/")
 
 # Set global variables
-NNODES_ANGLE = 30  # number of nodes in the circumference of the sleeve
-NNODES_LENGTH = 14  # number of nodes in the length of the sleeve
-SHAPE_PATH = 'shapes/DE/DE_35_35_25_30_15.obj'
+NNODES_ANGLE = 20  # number of nodes in the circumference of the sleeve
+NNODES_LENGTH = 16  # number of nodes in the length of the sleeve
+#SHAPE_PATH = 'shapes/DE/DE_35_35_25_30_15.obj'
 #SHAPE_PATH = 'shapes/Ellipse_64_270_twist_25_15.obj'
-#SHAPE_PATH = 'shapes/Cyl_30_bump_30_0.obj'
+SHAPE_PATH = 'shapes/CB_60_25_15.obj'
 
 
 TYPE = 'SMC'  # SMC (Smooth contact, for fea) | NSC (non-smooth contact, for solids)
@@ -96,7 +96,9 @@ shape.SetMass(10 * HUMAN_DENSITY * PI * (shape_diameter / 2.) ** 2 * shape_lengt
 
 # Get shape parameters
 all = SHAPE_PATH.split('/')[-1].split('.')[0].split('_')
-cyl_radius = tool.get_cylinder_radius(all[0], all[1:]) * UNIT_FACTOR
+cyl_radius, cyl_thickness = tool.get_cylinder_radius_thickness(all[0], all[1:])
+cyl_radius *= UNIT_FACTOR
+cyl_thickness *= UNIT_FACTOR
 
 # Move shape to the center
 print(bbmin, bbmax)
@@ -135,7 +137,7 @@ cloth_material = fea.ChMaterialShellReissnerIsothropic(rho, E, nu,
                                                        alpha, beta)
 
 cloth_length = shape_length
-cloth_radius = 0.8 * cyl_radius
+cloth_radius = 0.9 * cyl_radius
 node_mass = 0.1
 sleeve_thickness = 0.01
 alphadamp = 0.095
@@ -167,7 +169,7 @@ sleeve.move_to_extremities(cyl_radius, cyl_radius)
 sleeve.fix_extremities(shape, mysystem)
 
 # Extend the sleeve. It will be released after some iterations.
-sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 2000000. * UNIT_FACTOR
+sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 3000000. * UNIT_FACTOR
               * shape_diameter)
 
 # ---------------------------------------------------------------------
@@ -177,16 +179,16 @@ sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 2000000. * UNIT_FACTOR
 rigid_mesh = fea.ChMesh()
 
 # Generate the shape to optimize (cloth)
-cloth_nodes_pos, cloth_edges = gen_cylinder(shape_diameter, 1.2 * shape_length,
-                                            NNODES_ANGLE, NNODES_LENGTH,
-                                            shift_z=-1.2 * shape_length / 2.)
+# cloth_nodes_pos, cloth_edges = gen_cylinder(shape_diameter, 1.2 * shape_length,
+#                                             NNODES_ANGLE, NNODES_LENGTH,
+#                                             shift_z=-1.2 * shape_length / 2.)
 cloth_mesh_apx = fea.ChMesh()
-cloth_fea_nodes = []
-for cn in cloth_nodes_pos:
-    fea_node = fea.ChNodeFEAxyzD(chrono.ChVectorD(cn[0], cn[1], cn[2]))
-    fea_node.SetMass(node_mass)
-    cloth_fea_nodes.append(fea_node)
-    cloth_mesh_apx.AddNode(fea_node)
+# cloth_fea_nodes = []
+# for cn in cloth_nodes_pos:
+#     fea_node = fea.ChNodeFEAxyzD(chrono.ChVectorD(cn[0], cn[1], cn[2]))
+#     fea_node.SetMass(node_mass)
+#     cloth_fea_nodes.append(fea_node)
+#     cloth_mesh_apx.AddNode(fea_node)
 
 # # ---------------------------------------------------------------------
 # # VISUALIZATION
@@ -215,9 +217,9 @@ myapplication = chronoirr.ChIrrApp(mysystem, 'Cloth Simulation', chronoirr.dimen
 
 myapplication.AddTypicalSky()
 myapplication.AddTypicalLogo(chrono.GetChronoDataPath() + 'logo_pychrono_alpha.png')
-myapplication.AddTypicalCamera(chronoirr.vector3df(shape_length, shape_length / 2., shape_length / 2.))
+myapplication.AddTypicalCamera(chronoirr.vector3df(shape_length/2., shape_length / 4., shape_length / 2.))
 myapplication.AddTypicalLights()
-# myapplication.SetVideoframeSave(True)
+myapplication.SetVideoframeSave(True)
 
 # ==IMPORTANT!== Use this function for adding a ChIrrNodeAsset to all items
 # in the system. These ChIrrNodeAsset assets are 'proxies' to the Irrlicht meshes.
@@ -246,8 +248,12 @@ im_step = 0  # inverse modelling steps
 threshold = 0.00008  # minimum value to detect stabilization
 is_inverse_modeling = False
 is_detecting_stab = True
-current_cloth_nodes_pos = cloth_nodes_pos.copy()
 target_nodes = []
+target_edges = []
+cloth_nodes = []
+cloth_edges = []
+cloth_fea_nodes = []
+current_cloth_nodes_pos = []
 while myapplication.GetDevice().run():
     print('step', step)
     myapplication.BeginScene()
@@ -276,15 +282,34 @@ while myapplication.GetDevice().run():
 
         # When it is stabilized
         if mean_sd < threshold:
+            # Freeze the mesh
+            sleeve.freeze()
+
+            # Cut the extremities
+            left = -shape_length / 2. + cyl_thickness
+            right = shape_length / 2. - cyl_thickness
+            target_nodes, target_edges, target_na, target_nl = sleeve.cut_extremities(left, right)
+
+            # TODO downsample
+
             # Add the nodes as target nodes
-            for tn in sleeve.nodes:
+            for tn in target_nodes:
                 fea_node = fea.ChNodeFEAxyzD(chrono.ChVectorD(tn[0], tn[1], tn[2]))
                 rigid_mesh.AddNode(fea_node)
-                target_nodes.append(np.array([tn[0], tn[1], tn[2]]))
+
+            # Generate the shape to optimize (cloth)
+            cloth_nodes, cloth_edges = gen_cylinder(shape_diameter, 1.2 * shape_length,
+                                                    target_na, target_nl,
+                                                    shift_z=-1.2 * shape_length / 2.)
+            current_cloth_nodes_pos = cloth_nodes.copy()
+            for cn in cloth_nodes:
+                fea_node = fea.ChNodeFEAxyzD(chrono.ChVectorD(cn[0], cn[1], cn[2]))
+                fea_node.SetMass(node_mass)
+                cloth_fea_nodes.append(fea_node)
+                cloth_mesh_apx.AddNode(fea_node)
 
             is_inverse_modeling = True
             is_detecting_stab = False
-            sleeve.freeze()
             myapplication.SetTimestep(0.1)
             shape.GetAssets().pop()
             shape.GetAssets().pop()
@@ -294,7 +319,7 @@ while myapplication.GetDevice().run():
         print("inverse modelling")
         # Apply the force optimization algorithm and visualize each iteration
         updated_nodes_pos, fvall = shapeopt_force(current_cloth_nodes_pos, cloth_edges,
-                                                  target_nodes, sleeve.edges)
+                                                  target_nodes, target_edges)
 
         # Add a node to update visually the position of the nodes
         for fea_n, un in zip(cloth_fea_nodes, updated_nodes_pos):
@@ -307,8 +332,12 @@ while myapplication.GetDevice().run():
         # TODO
         if im_step > 80:
             is_inverse_modeling = False
-        myapplication.SetVideoframeSave(False)
+            myapplication.SetVideoframeSave(False)  # Stop filming
 
         im_step += 1
 
+
     step += 1
+
+
+## EXtract video from images:  ffmpeg -f image2 -framerate 18 -i screenshot%05d.bmp a.mp4

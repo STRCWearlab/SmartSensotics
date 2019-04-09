@@ -18,7 +18,6 @@ from sleeve_brick import SleeveBrick
 import numpy as np
 from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
-import tool
 
 # SetPos Not working. Doesnt understand inheritance.
 #node = fea.ChNodeFEAxyzD(chrono.ChVectorD(0,0,0))
@@ -41,8 +40,8 @@ import tool
 chrono.SetChronoDataPath("../data/")
 
 
-
-
+a = [0,1,2,3,4,5,6,7,8,9]
+print(a[2:-2])  # 2 3 4 5 6 7
 # ---------------------------------------------------------------------
 #
 # Create the simulation system and add items
@@ -54,23 +53,6 @@ mysystem.Set_G_acc(chrono.ChVectorD(0,0,0))
 chrono.ChCollisionModel.SetDefaultSuggestedEnvelope(0.000)
 chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.0001)
 
-
-# Change the millimeters units into meters
-filepath = tool.obj_from_millimeter(chrono.GetChronoDataPath() + SHAPE_PATH, UNIT_FACTOR, "_meters")
-
-shape = chrono.ChBody(contact_method)
-shape.SetDensity(HUMAN_DENSITY)
-shape.SetBodyFixed(True)
-shape_mesh = chrono.ChObjShapeFile()
-shape_mesh.SetFilename(filepath)
-shape.AddAsset(shape_mesh)
-tmc = chrono.ChTriangleMeshConnected()
-tmc.LoadWavefrontMesh(filepath)
-shape.GetCollisionModel().ClearModel()
-shape.GetCollisionModel().AddTriangleMesh(tmc, True, True)
-shape.GetCollisionModel().BuildModel()
-shape.SetShowCollisionMesh(True)
-shape.SetCollide(False)
 
 # ---------------------------------------------------------------------
 # Test brick mesh

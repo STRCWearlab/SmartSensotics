@@ -196,6 +196,50 @@ class SleeveShellReissner:
         # print(sum(dist))
         return sum(dist) / len(previous_nodes)
 
+    def cut_extremities(self, left, right):
+        """
+        Remove nodes under left value and above right values
+        :param left: the distance in meters
+        :param right: the distance in meters
+        :return: a new list of nodes and new list of edges
+        """
+        self.update_nodes()
+        new_nodes = self.nodes.copy()
+        new_edges = self.edges.copy()
+
+        # Left and right values are measured along z axis
+        remove_until = 0
+        remove_from = 0
+        new_nl = self.nl
+        for i in range(self.nl):
+            # Get first node of this length
+            n = self.nodes[i*self.na]
+            if n[2] <= left:
+                # Remove all the nodes below left
+                remove_until += self.na
+                new_nl -= 1
+            if n[2] >= right:
+                # Remove all the nodes above right
+                remove_from += self.na
+                new_nl -= 1
+
+        # Remove the nodes and edges
+        new_nodes = new_nodes[remove_until:-remove_from]
+        new_edges = new_edges[remove_until:-remove_from]
+
+        # Update edges' neighbourhood
+        for e in new_edges:
+            for i in range(4):
+                e[i] -= remove_until
+                if e[i] < 0:
+                    e[i] = -1
+        # for e in new_edges[:self.na]:
+        #     e[0] = -1
+        for e in new_edges[-self.na:]:
+            e[2] = -1
+
+        return new_nodes, new_edges, self.na, new_nl
+
     def downsample(self, factor_angle, factor_length):
         """
         Reduce the number of nodes by a specified factor.
@@ -203,3 +247,4 @@ class SleeveShellReissner:
         :param factor_length: downsampling factor for the number of nodes in the length
         :return:
         """
+

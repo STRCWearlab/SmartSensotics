@@ -40,7 +40,7 @@ def obj_from_millimeter(filepath, unit_factor, filename_suffix):
     return '/'.join(folders[:-1]) + '/' + new_file_name
 
 
-def get_cylinder_radius(shape_type, params):
+def get_cylinder_radius_thickness(shape_type, params):
     if shape_type == 'DE':
-        return int(params[-2])
-    return int(params[-2])
+        return int(params[-2]), int(params[-1])
+    return int(params[-2]), int(params[-1])
