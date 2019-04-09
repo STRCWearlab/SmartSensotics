@@ -38,3 +38,9 @@ def obj_from_millimeter(filepath, unit_factor, filename_suffix):
             f_mm.write(res)
     f_mm.close()
     return '/'.join(folders[:-1]) + '/' + new_file_name
+
+
+def get_cylinder_radius(shape_type, params):
+    if shape_type == 'DE':
+        return int(params[-2])
+    return None

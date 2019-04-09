@@ -195,3 +195,11 @@ class SleeveShellReissner:
             dist.append(np.linalg.norm(pn - cn))
         # print(sum(dist))
         return sum(dist) / len(previous_nodes)
+
+    def downsample(self, factor_angle, factor_length):
+        """
+        Reduce the number of nodes by a specified factor.
+        :param factor_angle: downsampling factor for the number of nodes in the angle
+        :param factor_length: downsampling factor for the number of nodes in the length
+        :return:
+        """

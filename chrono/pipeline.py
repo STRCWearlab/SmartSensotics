@@ -31,12 +31,12 @@ print("Cloth Simulation: Pipeline for the smartsensotics project")
 chrono.SetChronoDataPath("../data/")
 
 # Set global variables
-NNODES_ANGLE = 10  # number of nodes in the circumference of the sleeve
+NNODES_ANGLE = 12  # number of nodes in the circumference of the sleeve
 NNODES_LENGTH = 12  # number of nodes in the length of the sleeve
 # SHAPE_PATH = 'shapes/cyl30a.obj'
 # SHAPE_PATH = 'shapes/Cyl_30_bump.obj'
 # SHAPE_PATH = 'shapes/Ellipse_64_270_twist.obj'
-SHAPE_PATH = 'shapes/DE/DE_35_25_35.obj'
+SHAPE_PATH = 'shapes/DE/DE_35_35_25_30_15.obj'
 
 TYPE = 'SMC'  # SMC (Smooth contact, for fea) | NSC (non-smooth contact, for solids)
 SOLVER = 'MKL'  # MKL (more precise for FEA elements) | '' (default one)
@@ -95,12 +95,12 @@ shape.SetMass(10 * HUMAN_DENSITY * PI * (shape_diameter / 2.) ** 2 * shape_lengt
 
 # Get shape parameters
 all = SHAPE_PATH.split('/')[-1].split('.')[0].split('_')
-params = all[1:]
-cyl_radius = float(params[-1]) * UNIT_FACTOR
+cyl_radius = tool.get_cylinder_radius(all[0], all[1:]) * UNIT_FACTOR
 
 # Move shape to the center
-shape.SetPos(chrono.ChVectorD(-shape_diameter / 2. - bbmin[0],
-                              -shape_diameter / 2. - bbmin[1],
+print(bbmin, bbmax)
+shape.SetPos(chrono.ChVectorD(-(bbmax[0]-bbmin[0])/2 + bbmin[0],
+                              -(bbmax[1]-bbmin[1])/2 + bbmin[1],
                               -shape_length / 2. - bbmin[2]))
 shape.SyncCollisionModels()
 mysystem.Add(shape)
@@ -134,7 +134,7 @@ cloth_material = fea.ChMaterialShellReissnerIsothropic(rho, E, nu,
                                                        alpha, beta)
 
 cloth_length = shape_length
-cloth_radius = 0.7 * shape_diameter / 2.0  # TODO make the mesh smaller than the shape
+cloth_radius = 0.8 * cyl_radius
 node_mass = 0.1
 sleeve_thickness = 0.01
 alphadamp = 0.095
@@ -160,15 +160,13 @@ mcontact.AddFacesFromBoundary(sphere_swept_thickness)
 mcontact.SetMaterialSurface(contact_material)
 
 # Move the extremities of the sleeve to the extremities of the shape which is made of 2 cylinders
-# Compute extremities of the shape
-print('cyl_radius', cyl_radius)
 sleeve.move_to_extremities(cyl_radius, cyl_radius)
 
 # Fix the extremities of the sleeve to the cylinder
 sleeve.fix_extremities(shape, mysystem)
 
 # Extend the sleeve. It will be released after some iterations.
-sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 4000000. * UNIT_FACTOR
+sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 8000000. * UNIT_FACTOR
               * shape_diameter)
 
 # ---------------------------------------------------------------------
@@ -256,7 +254,7 @@ while myapplication.GetDevice().run():
     myapplication.DoStep()
     myapplication.EndScene()
 
-    if step == int(NNODES_ANGLE * NNODES_LENGTH /3):
+    if step == int(NNODES_ANGLE * NNODES_LENGTH /2.5):
         sleeve.release()
         shape.SetCollide(True)
 
