@@ -6,6 +6,13 @@ Shape sensing textile for orthotics.
 - `data` mesh files, textures
 - `chrono` python files to run 3D simulations
 
+## Shapes naming convention
+The shapes files are named `{SHAPE_TYPE}_PARAM[_PARAM].obj` where `SHAPE_TYPE` is the type of the shape and `PARAM` a parameter defining that shape (like the radius). The following table describes the naming convention:
+
+| SHAPE_TYPE | Description | PARAM | Example |
+|---|---|---|---|
+| DE | Double Ellipsis  | r1 (common radius), r2 (bottom), r3 (upper) in [mm] | DE_12_7_8.obj |
+
 ## ProjectChrono
 
 [ProjectChrono](https://projectchrono.org/) is an Open Source Multi-physics Simulation Engine. It is cross-platform. We use the PyChrono interface to run 3D simulation in python 3.6.
