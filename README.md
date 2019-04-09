@@ -9,9 +9,10 @@ Shape sensing textile for orthotics.
 ## Shapes naming convention
 The shapes files are named `{SHAPE_TYPE}_PARAM[_PARAM].obj` where `SHAPE_TYPE` is the type of the shape and `PARAM` a parameter defining that shape (like the radius). The following table describes the naming convention:
 
-| SHAPE_TYPE | Description | PARAM | Example |
-|---|---|---|---|
-| DE | Double Ellipsis  | r1_r2_r3_cylradius_cylthickness in [mm] | DE_12_7_8.obj |
+| SHAPE_TYPE | Description | PARAM | Center of Cyl. | Example |
+|---|---|---|---|---|
+| DE | Double Ellipsis  | r1_r2_r3_cylradius_cylthickness in [mm] | [r1,cylradius] | DE_12_7_8.obj |
+| CB | Cylinder Bump | r_cylradius_thickness in [mm] | [r,r] | CB_12_10_2.obj |
 
 ## ProjectChrono
 
