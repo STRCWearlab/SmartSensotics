@@ -117,8 +117,8 @@ node_mass = 10.
 sleeve_thickness = 0.1
 alphadamp = 0.1
 sleeve = SleeveShellReissner(CLOTH_LENGTH, CLOTH_RADIUS, nnodes_angle, nnodes_length,
-                             node_mass, sleeve_thickness, alphadamp,
-                             cloth_material, shift_y=0, shift_z=-CLOTH_LENGTH/2)
+                             cloth_material, node_mass, sleeve_thickness, alphadamp,
+                             shift_y=0, shift_z=-CLOTH_LENGTH/2)
 
 mat_elastic = chrono.ChContinuumElastic(E, nu, rho)
 #sleeve_brick = SleeveBrick(CLOTH_LENGTH, 2.0*CLOTH_RADIUS, 0.05, 7, 3,

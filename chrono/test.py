@@ -18,6 +18,7 @@ from sleeve_brick import SleeveBrick
 import numpy as np
 from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
+import tool
 
 # SetPos Not working. Doesnt understand inheritance.
 #node = fea.ChNodeFEAxyzD(chrono.ChVectorD(0,0,0))
@@ -39,21 +40,7 @@ from mpl_toolkits.mplot3d import Axes3D
 # It must point to the data folder, containing GUI assets (textures, fonts, meshes, etc.)
 chrono.SetChronoDataPath("../data/")
 
-# Preprocess obj file to change millimeters to meters
-f_mm = open(chrono.GetChronoDataPath()+'shapes/cyl30_mm.obj', 'w+')
-with open(chrono.GetChronoDataPath()+'shapes/cyl30.obj') as f:
-    for line in f:
-        res = line
-        if line.startswith('v'):
-            values = line.split(' ')
-            xyz = np.array(values[1:], dtype=np.float)
-            print(xyz)
-            ## Change millimeters to meters
-            xyz *= 0.001
-            res = values[0] + " " + " ".join([str(val) for val in xyz]) + '\n'
-            print(res)
-        f_mm.write(res)
-f_mm.close()
+
 
 
 # ---------------------------------------------------------------------
@@ -66,6 +53,24 @@ mysystem.Set_G_acc(chrono.ChVectorD(0,0,0))
 # very small objects. Set this before creating shapes. Not before creating mysystem.
 chrono.ChCollisionModel.SetDefaultSuggestedEnvelope(0.000)
 chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.0001)
+
+
+# Change the millimeters units into meters
+filepath = tool.obj_from_millimeter(chrono.GetChronoDataPath() + SHAPE_PATH, UNIT_FACTOR, "_meters")
+
+shape = chrono.ChBody(contact_method)
+shape.SetDensity(HUMAN_DENSITY)
+shape.SetBodyFixed(True)
+shape_mesh = chrono.ChObjShapeFile()
+shape_mesh.SetFilename(filepath)
+shape.AddAsset(shape_mesh)
+tmc = chrono.ChTriangleMeshConnected()
+tmc.LoadWavefrontMesh(filepath)
+shape.GetCollisionModel().ClearModel()
+shape.GetCollisionModel().AddTriangleMesh(tmc, True, True)
+shape.GetCollisionModel().BuildModel()
+shape.SetShowCollisionMesh(True)
+shape.SetCollide(False)
 
 # ---------------------------------------------------------------------
 # Test brick mesh

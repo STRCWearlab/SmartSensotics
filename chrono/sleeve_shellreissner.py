@@ -15,8 +15,8 @@ class SleeveShellReissner:
     MIN_NL = 2  # Minimum number of nodes in the length
     na = 3
     nl = 2
-    nodes = None  # List of nodes
-    fea_nodes = None
+    nodes = []  # List of nodes
+    fea_nodes = []
     edges = None  # list of edges
     elements = None  # List of elements
     mesh = None
@@ -180,10 +180,21 @@ class SleeveShellReissner:
                 # Apply a force towards the outside of the sleeve
                 self.fea_nodes[j * self.na + i].SetForce(force_vector)
 
-    def update_nodes(self):
+    def update_nodes(self, mesh):
         for i, fn in enumerate(self.fea_nodes):
             pos = eval(str(fn.GetPos()))
             self.nodes[i] = pos
+
+        #for i in range(len(self.fea_nodes)):
+        #    n = mesh.GetNode(i)
+        #    pos = eval(str(n.GetPos()))
+        #    self.nodes[i] = pos
+
+    def get_nnodes(self):
+        """
+        :return: The number of nodes
+        """
+        return self.na * self.nl
 
     def release(self):
         """
