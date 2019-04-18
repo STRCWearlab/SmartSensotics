@@ -32,11 +32,15 @@ print("Cloth Simulation: Pipeline for the smartsensotics project")
 chrono.SetChronoDataPath("../data/")
 
 # Set global variables
-NNODES_ANGLE = 20  # number of nodes in the circumference of the sleeve
-NNODES_LENGTH = 16  # number of nodes in the length of the sleeve
+
+# number of nodes in the circumference of the sleeve, equals to number of edges
+NNODES_ANGLE = 20
+# number of nodes in the length of the sleeve, equals to the number of rings
+NNODES_LENGTH = 16
 #SHAPE_PATH = 'shapes/DE/DE_35_35_25_30_15.obj'
 #SHAPE_PATH = 'shapes/Ellipse_64_270_twist_25_15.obj'
 SHAPE_PATH = 'shapes/CB_60_25_15.obj'
+SAVE_VIDEO = False
 
 
 TYPE = 'SMC'  # SMC (Smooth contact, for fea) | NSC (non-smooth contact, for solids)
@@ -136,6 +140,7 @@ beta = 0.2  # torque factor
 cloth_material = fea.ChMaterialShellReissnerIsothropic(rho, E, nu,
                                                        alpha, beta)
 
+# Create the mesh
 cloth_length = shape_length
 cloth_radius = 0.9 * cyl_radius
 node_mass = 0.1
@@ -219,7 +224,7 @@ myapplication.AddTypicalSky()
 myapplication.AddTypicalLogo(chrono.GetChronoDataPath() + 'logo_pychrono_alpha.png')
 myapplication.AddTypicalCamera(chronoirr.vector3df(shape_length/2., shape_length / 4., shape_length / 2.))
 myapplication.AddTypicalLights()
-myapplication.SetVideoframeSave(True)
+myapplication.SetVideoframeSave(SAVE_VIDEO)
 
 # ==IMPORTANT!== Use this function for adding a ChIrrNodeAsset to all items
 # in the system. These ChIrrNodeAsset assets are 'proxies' to the Irrlicht meshes.
