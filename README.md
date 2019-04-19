@@ -13,6 +13,7 @@ The shapes files are named `{SHAPE_TYPE}_PARAM[_PARAM].obj` where `SHAPE_TYPE` i
 |---|---|---|---|---|
 | DE | Double Ellipsis  | r1_r2_r3_cylradius_cylthickness in [mm] | [r1,cylradius] | DE_12_7_8.obj |
 | CB | Cylinder Bump | r_cylradius_thickness in [mm] | [r,r] | CB_12_10_2.obj |
+| C | Regular Cylinder | `_radius` of the cylinder in [mm] | C_31.obj |
 
 ## ProjectChrono
 
