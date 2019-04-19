@@ -62,9 +62,9 @@ def get_shape_min_radius(shape_path, depth, height):
     shape_type, params = get_shape_params(shape_path)
     min_radius = min(depth, height) / 2.
     if shape_type == 'C':
-        min_radius = params[0]
+        min_radius = eval(params[0])
     if shape_type == 'Cone':
-        min_radius = params[0]
+        min_radius = eval(params[0])
     return min_radius
 
 
@@ -99,12 +99,15 @@ def load_shape(filepath, contact_method, texture):
     return shape
 
 
-def build_external_cylinder(cyl_radius, shape_length, density, contact_method):
+def build_external_cylinder(cyl_radius, shape_length, density, contact_method, offset):
     """
     Build a left and right cylinder next to the shape_lenght that must be centered
     on 0,0,0 coord system.
     :param cyl_radius: radius of the two external cylinders
     :param shape_length: lenght of the shape
+    :param density: Density of the cylinders
+    :param contact_method: SMC or NSC
+    :param offset: distance between disk and shape
     :return: two ChEasyCylinder
     """
     height = 0.01 * shape_length
@@ -115,6 +118,8 @@ def build_external_cylinder(cyl_radius, shape_length, density, contact_method):
                                           True, True, contact_method)
     left_cyl.SetRot(qCylinder)
     right_cyl.SetRot(qCylinder)
-    left_cyl.SetPos(chrono.ChVectorD(0, 0, -shape_length / 2. - height))
-    right_cyl.SetPos(chrono.ChVectorD(0, 0, shape_length / 2. + height))
+    left_cyl.SetPos(chrono.ChVectorD(0, 0, -(shape_length / 2. + offset)))
+    right_cyl.SetPos(chrono.ChVectorD(0, 0, shape_length / 2. + offset))
+    left_cyl.SetBodyFixed(True)
+    right_cyl.SetBodyFixed(True)
     return left_cyl, right_cyl

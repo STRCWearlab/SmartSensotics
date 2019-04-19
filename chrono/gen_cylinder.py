@@ -1,6 +1,7 @@
 import math
 import numpy as np
 
+
 def gen_cylinder(radius, length, na, nl,
                  shift_x=0, shift_y=0, shift_z=0):
     """
@@ -27,7 +28,7 @@ def gen_cylinder(radius, length, na, nl,
     edges = []
     nidx = 0
     for i in range(nl):
-        cl = length/(nl-1)*i + shift_z  # current length
+        cl = length / (nl - 1) * i + shift_z  # current length
 
         for j in range(na):
 
@@ -40,33 +41,92 @@ def gen_cylinder(radius, length, na, nl,
 
             # Make edges
             # [left_node, next_angle_node, right_node, previous_angle_node]
-            e = [-1]*4
+            e = [-1] * 4
 
             # Link left
             if i > 0:
                 e[0] = nidx - na
-                #e[0] = na * (i - 1) + j
+                # e[0] = na * (i - 1) + j
             # link right
-            if i < nl-1:
+            if i < nl - 1:
                 e[2] = nidx + na
-                #e[2] = na * (i + 1) + j
+                # e[2] = na * (i + 1) + j
             # link to previous angle
             if j > 0:
                 e[3] = nidx - 1
-                #e[3] = na * i + j - 1
+                # e[3] = na * i + j - 1
             else:
-                e[3] = nidx+(na-1)
-                #e[3] = na * (i + 1) - 1
+                e[3] = nidx + (na - 1)
+                # e[3] = na * (i + 1) - 1
             # link to next angle
-            if j < na-1:
-                e[1] = nidx+1
-                #e[1] = na * i + j + 1
+            if j < na - 1:
+                e[1] = nidx + 1
+                # e[1] = na * i + j + 1
             else:
-                e[1] = nidx-(na-1)
+                e[1] = nidx - (na - 1)
 
             edges.append(e)
             nidx += 1
 
-            #print(f"Node[{i},{j}] {na*i+j} (ca={ca}, cl={cl}) edges: {e[0]} {e[1]} {e[2]} {e[3]}")
+            # print(f"Node[{i},{j}] {na*i+j} (ca={ca}, cl={cl}) edges: {e[0]} {e[1]} {e[2]} {e[3]}")
 
     return np.array(nodes), np.array(edges)
+
+
+def downsample(from_nodes, from_edges, from_na, from_nl,
+               to_na, to_nl):
+    """
+    Downsample the number of nodes from to to.
+    !!! Call update_nodes() to be sure to have the positions updated
+    :param from_nodes:
+    :param from_edges:
+    :param from_na:
+    :param from_nl:
+    :param to_na:
+    :param to_nl:
+    :param na: Number of nodes desired in the angle
+    :param nl: Number of nodes desired in the length (number of rings)
+    :return: the nodes and edges structure
+    """
+    l_jump = int(math.ceil(from_nl/to_nl))
+    a_jump = int(math.ceil(from_na/to_na))
+    # Build the mask that tells which nodes to keep
+    mask = [False] * (from_na * from_nl)
+    for i in range(from_na):
+        for j in range(from_nl):
+            idx = i + j * from_nl
+            mask[idx] = j % l_jump == 0 and i % a_jump == 0
+
+    # TODO add last nodes if target nodes are missing
+
+    # Update neighborhood
+    _, to_edges = gen_cylinder(10,10,to_na, to_nl)
+    # to_edges = from_edges.copy()
+    # for i in range(from_na):
+    #     for j in range(from_nl):
+    #         idx = i+j*from_nl
+    #         if mask[idx] and i + a_jump < from_na:
+    #
+    #             # Update left neighbor
+    #             if from_edges[idx][0] >= 0:
+    #                 to_edges[idx][0] = i+(j-l_jump)*from_nl
+    #
+    #             # Update right neighbor
+    #             if from_edges[idx][2] >= 0:
+    #                 to_edges[idx][2] = i+(j+l_jump)*from_nl
+    #
+    #             # Update next angle neighbor
+    #             to_edges[idx][1] = i+a_jump+j*from_nl
+    #             to_edges[idx][1] = i+a_jump+j*from_nl
+    #
+    #             # Update previous angle neighbor
+    #             to_edges[idx][3] = i-a_jump+j*from_nl
+
+    # Filter nodes and edges with mask
+    to_nodes = np.array([n for n, c in zip(from_nodes, mask) if c])
+    #to_edges = [e for e, c in zip(to_edges, mask) if c]
+
+    print('# target nodes, len nodes, len edges', to_na*to_nl, len(to_nodes), len(to_edges))
+    print(to_nodes)
+    print(to_edges)
+    return to_nodes, to_edges

@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff7ef4f9-f61b-4a60-8e49-6bbbd412e936" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pipeline_release.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chrono_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/chrono_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipeline.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen_cylinder.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen_cylinder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pipeline_release.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipeline_release.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sleeve_shellreissner.py" beforeDir="false" afterPath="$PROJECT_DIR$/sleeve_shellreissner.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,8 +33,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/cloth_simulation.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="434">
-                  <caret line="88" column="28" lean-forward="true" selection-start-line="88" selection-start-column="28" selection-end-line="88" selection-end-column="28" />
+                <state relative-caret-position="1312">
+                  <caret line="88" column="28" selection-start-line="88" selection-start-column="28" selection-end-line="88" selection-end-column="28" />
                   <folding>
                     <element signature="e#309#339#0" expanded="true" />
                   </folding>
@@ -45,8 +45,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/shapeopt_force.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="208">
-                  <caret line="13" selection-start-line="13" selection-end-line="13" />
+                <state relative-caret-position="416">
+                  <caret line="26" selection-start-line="26" selection-end-line="26" />
                 </state>
               </provider>
             </entry>
@@ -54,8 +54,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pipeline.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1528">
-                  <caret line="249" column="31" selection-start-line="249" selection-start-column="31" selection-end-line="249" selection-end-column="31" />
+                <state relative-caret-position="209">
+                  <caret line="104" column="25" selection-start-line="104" selection-start-column="12" selection-end-line="104" selection-end-column="25" />
                   <folding>
                     <element signature="e#745#775#0" expanded="true" />
                   </folding>
@@ -66,8 +66,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/pipeline_release.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="283">
-                  <caret line="97" column="22" lean-forward="true" selection-start-line="97" selection-start-column="22" selection-end-line="97" selection-end-column="22" />
+                <state relative-caret-position="576">
+                  <caret line="287" column="34" lean-forward="true" selection-start-line="287" selection-start-column="34" selection-end-line="287" selection-end-column="34" />
                   <folding>
                     <element signature="e#745#775#0" expanded="true" />
                   </folding>
@@ -76,10 +76,13 @@
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$USER_HOME$/.PyCharm2018.3/system/python_stubs/1888838950/math.py">
+            <entry file="file://$PROJECT_DIR$/sim_force.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="226">
-                  <caret line="295" column="4" selection-start-line="295" selection-start-column="4" selection-end-line="295" selection-end-column="4" />
+                <state relative-caret-position="624">
+                  <caret line="145" selection-start-line="145" selection-end-line="145" />
+                  <folding>
+                    <element signature="e#346#376#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -87,20 +90,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/irrlicht.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1002">
-                  <caret line="4673" column="33" selection-start-line="4673" selection-start-column="8" selection-end-line="4673" selection-end-column="33" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/sim_force.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2208">
-                  <caret line="145" selection-start-line="145" selection-end-line="145" />
-                  <folding>
-                    <element signature="e#346#376#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="218">
+                  <caret line="4793" column="8" selection-start-line="4793" selection-start-column="8" selection-end-line="4793" selection-end-column="8" />
                 </state>
               </provider>
             </entry>
@@ -124,8 +115,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/gen_cylinder.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="624">
-                  <caret line="40" column="24" selection-start-line="40" selection-start-column="24" selection-end-line="40" selection-end-column="24" />
+                <state relative-caret-position="514">
+                  <caret line="130" column="19" selection-start-line="130" selection-start-column="19" selection-end-line="130" selection-end-column="19" />
                   <folding>
                     <element signature="e#0#11#0" expanded="true" />
                   </folding>
@@ -133,20 +124,20 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/geo.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1216">
-                  <caret line="76" selection-start-line="76" selection-end-line="76" />
+                <state relative-caret-position="218">
+                  <caret line="26" selection-start-line="26" selection-end-line="26" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/chrono_utils.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="130">
-                  <caret line="55" column="16" lean-forward="true" selection-start-line="55" selection-start-column="16" selection-end-line="55" selection-end-column="16" />
+                <state relative-caret-position="402">
+                  <caret line="95" column="72" selection-start-line="95" selection-start-column="65" selection-end-line="95" selection-end-column="72" />
                   <folding>
                     <element signature="e#0#25#0" expanded="true" />
                   </folding>
@@ -157,8 +148,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/core.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="218">
-                  <caret line="14319" column="8" selection-start-line="14319" selection-start-column="8" selection-end-line="14319" selection-end-column="8" />
+                <state relative-caret-position="384">
+                  <caret line="9741" column="8" selection-start-line="9741" selection-start-column="8" selection-end-line="9741" selection-end-column="8" />
                 </state>
               </provider>
             </entry>
@@ -166,8 +157,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/sleeve_shellreissner.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="555">
-                  <caret line="285" column="26" selection-start-line="285" selection-start-column="26" selection-end-line="285" selection-end-column="26" />
+                <state relative-caret-position="186">
+                  <caret line="252" column="52" selection-start-line="252" selection-start-column="52" selection-end-line="252" selection-end-column="52" />
                   <folding>
                     <element signature="e#0#25#0" expanded="true" />
                   </folding>
@@ -188,10 +179,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>sphere_swept_thickness</find>
-      <find>rigid_edges</find>
-      <find>cloth_mesh</find>
-      <find>dens</find>
       <find>mass</find>
       <find>NNODES_ANGLE</find>
       <find>cloth_fea_nodes</find>
@@ -203,7 +190,6 @@
       <find>print</find>
       <find>fix</find>
       <find>update_nodes</find>
-      <find>rigid_mesh</find>
       <find>cloth_mesh_apx</find>
       <find>current_cloth_nodes_pos</find>
       <find>update</find>
@@ -213,11 +199,16 @@
       <find>sleeve_thickness</find>
       <find>thickness</find>
       <find>TYPE</find>
-      <find>Move</find>
       <find>all</find>
       <find>_meters</find>
       <find>rot</find>
       <find>min_rad</find>
+      <find>Move</find>
+      <find>cut</find>
+      <find>skin</find>
+      <find>cyl_thickness</find>
+      <find>rigid_mesh</find>
+      <find>fric</find>
     </findStrings>
     <replaceStrings>
       <replace>self.nodes</replace>
@@ -239,14 +230,14 @@
         <option value="$PROJECT_DIR$/sleeve_brick.py" />
         <option value="$PROJECT_DIR$/shapeopt_force.py" />
         <option value="$PROJECT_DIR$/sim_force.py" />
-        <option value="$PROJECT_DIR$/gen_cylinder.py" />
         <option value="$PROJECT_DIR$/cloth_simulation.py" />
         <option value="$PROJECT_DIR$/geo.py" />
         <option value="$PROJECT_DIR$/shape.py" />
         <option value="$PROJECT_DIR$/test.py" />
-        <option value="$PROJECT_DIR$/sleeve_shellreissner.py" />
         <option value="$PROJECT_DIR$/pipeline.py" />
         <option value="$PROJECT_DIR$/chrono_utils.py" />
+        <option value="$PROJECT_DIR$/sleeve_shellreissner.py" />
+        <option value="$PROJECT_DIR$/gen_cylinder.py" />
         <option value="$PROJECT_DIR$/pipeline_release.py" />
       </list>
     </option>
@@ -263,6 +254,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -274,10 +266,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -468,18 +460,20 @@
       <workItem from="1554721157144" duration="46552000" />
       <workItem from="1555581769104" duration="455000" />
       <workItem from="1555582350870" duration="10433000" />
-      <workItem from="1555659196990" duration="8792000" />
+      <workItem from="1555659196990" duration="12293000" />
+      <workItem from="1555674060624" duration="114000" />
+      <workItem from="1555674469635" duration="9485000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="218110000" />
+    <option name="totallyTimeSpent" value="231210000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13326226" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13539445" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -494,7 +488,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32917964" />
-      <window_info anchor="bottom" id="Python Console" order="12" visible="true" weight="0.24222937" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="12" visible="true" weight="0.24222937" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -560,20 +554,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/fea.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="10647" selection-start-line="10647" selection-end-line="10647" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shape.py" />
-    <entry file="file://$PROJECT_DIR$/sim_force.py">
+    <entry file="file://$PROJECT_DIR$/cloth_simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2208">
-          <caret line="145" selection-start-line="145" selection-end-line="145" />
+        <state relative-caret-position="1312">
+          <caret line="88" column="28" selection-start-line="88" selection-start-column="28" selection-end-line="88" selection-end-column="28" />
           <folding>
-            <element signature="e#346#376#0" expanded="true" />
+            <element signature="e#309#339#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -588,10 +575,85 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gen_cylinder.py">
+    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/fea.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="9508" column="8" selection-start-line="9508" selection-start-column="8" selection-end-line="9508" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/python_stubs/1888838950/math.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="624">
-          <caret line="40" column="24" selection-start-line="40" selection-start-column="24" selection-end-line="40" selection-end-column="24" />
+          <caret line="295" column="4" selection-start-line="295" selection-start-column="4" selection-end-line="295" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/core.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="384">
+          <caret line="9741" column="8" selection-start-line="9741" selection-start-column="8" selection-end-line="9741" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sim_force.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="624">
+          <caret line="145" selection-start-line="145" selection-end-line="145" />
+          <folding>
+            <element signature="e#346#376#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/irrlicht.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="4793" column="8" selection-start-line="4793" selection-start-column="8" selection-end-line="4793" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipeline.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="104" column="25" selection-start-line="104" selection-start-column="12" selection-end-line="104" selection-end-column="25" />
+          <folding>
+            <element signature="e#745#775#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chrono_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="402">
+          <caret line="95" column="72" selection-start-line="95" selection-start-column="65" selection-end-line="95" selection-end-column="72" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sleeve_shellreissner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="252" column="52" selection-start-line="252" selection-start-column="52" selection-end-line="252" selection-end-column="52" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shapeopt_force.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="26" selection-start-line="26" selection-end-line="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gen_cylinder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="514">
+          <caret line="130" column="19" selection-start-line="130" selection-start-column="19" selection-end-line="130" selection-end-column="19" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
@@ -600,83 +662,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/geo.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1216">
-          <caret line="76" selection-start-line="76" selection-end-line="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/irrlicht.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1002">
-          <caret line="4673" column="33" selection-start-line="4673" selection-start-column="8" selection-end-line="4673" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sleeve_shellreissner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="285" column="26" selection-start-line="285" selection-start-column="26" selection-end-line="285" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/python_stubs/1888838950/math.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="295" column="4" selection-start-line="295" selection-start-column="4" selection-end-line="295" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shapeopt_force.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/core.py">
-      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="218">
-          <caret line="14319" column="8" selection-start-line="14319" selection-start-column="8" selection-end-line="14319" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pipeline.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1528">
-          <caret line="249" column="31" selection-start-line="249" selection-start-column="31" selection-end-line="249" selection-end-column="31" />
-          <folding>
-            <element signature="e#745#775#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cloth_simulation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="88" column="28" lean-forward="true" selection-start-line="88" selection-start-column="28" selection-end-line="88" selection-end-column="28" />
-          <folding>
-            <element signature="e#309#339#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chrono_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="55" column="16" lean-forward="true" selection-start-line="55" selection-start-column="16" selection-end-line="55" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
+          <caret line="26" selection-start-line="26" selection-end-line="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pipeline_release.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="97" column="22" lean-forward="true" selection-start-line="97" selection-start-column="22" selection-end-line="97" selection-end-column="22" />
+        <state relative-caret-position="576">
+          <caret line="287" column="34" lean-forward="true" selection-start-line="287" selection-start-column="34" selection-end-line="287" selection-end-column="34" />
           <folding>
             <element signature="e#745#775#0" expanded="true" />
           </folding>

@@ -122,7 +122,7 @@ class SleeveShellReissner:
         for fn in self.fea_nodes:
             fn.SetFixed(False)
 
-    def fix_extremities(self, body, system):
+    def fix_extremity(self, fea_nodes, body, system):
         """
         Fix the extremities of the sleeve to the left and right side of the body
 
@@ -130,11 +130,22 @@ class SleeveShellReissner:
         :param system:
         :return:
         """
-        for fn in self.fea_nodes[:self.na] + self.fea_nodes[self.na * (self.nl - 1):]:
+        for fn in fea_nodes:
             constr = chrono.ChLinkMateGeneric()
             constr.Initialize(fn, body, False, fn.Frame(), fn.Frame())
             system.Add(constr)
             constr.SetConstrainedCoords(True, True, True, True, True, True)
+
+    def fix_extremities(self, body_left, body_right, system):
+        """
+        Fix the extremities of the sleeve to the left and right disks
+        :param body_left: a ChBody where the left nodes of the sleeve will be fixed
+        :param body_right: a ChBody where the right nodes of the sleeve will be fixed
+        :param system: the project chrono system to add constraints
+        :return: Nothing
+        """
+        self.fix_extremity(self.fea_nodes[:self.na], body_left, system)
+        self.fix_extremity(self.fea_nodes[self.na * (self.nl - 1):], body_right, system)
 
     def move(self, fns, ns, a, b):
         i = 0
@@ -214,7 +225,7 @@ class SleeveShellReissner:
         new_nl = self.nl
         for i in range(self.nl):
             # Get first node of this length
-            n = self.nodes[i*self.na]
+            n = self.nodes[i * self.na]
             if n[2] <= left:
                 # Remove all the nodes below left
                 remove_until += self.na
@@ -240,14 +251,6 @@ class SleeveShellReissner:
             e[2] = -1
 
         return new_nodes, new_edges, self.na, new_nl
-
-    def downsample(self, factor_angle, factor_length):
-        """
-        Reduce the number of nodes by a specified factor.
-        :param factor_angle: downsampling factor for the number of nodes in the angle
-        :param factor_length: downsampling factor for the number of nodes in the length
-        :return:
-        """
 
     def move_to_shape_extremities(self, SHAPE_PATH, bb_dx, bb_dy, bb_dz):
         """
@@ -281,12 +284,12 @@ class SleeveShellReissner:
         :param bb_dy: bounding box y dimension
         :return:
         """
-        r = max(bb_dx, bb_dy)/2.
+        r = max(bb_dx, bb_dy) / 2.
         for i in range(self.na):
             ca = i / self.na * 2. * math.pi  # current angle in radians
             x = math.cos(ca) * r
             y = math.sin(ca) * r
-            for j in range(1, self.nl-1):
+            for j in range(1, self.nl - 1):
                 z = self.nodes[j * self.na + i][2]
                 pos_vector = chrono.ChVectorD(x, y, z)
                 # Apply a force towards the outside of the sleeve
