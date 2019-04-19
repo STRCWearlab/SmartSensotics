@@ -12,7 +12,7 @@ def make_ChVectorD(v):
 def obj_from_millimeter(filepath, unit_factor, filename_suffix):
     """
     Change .obj files units from millimeter to the desired unit. Create a new file
-    with the given extension_name
+    with the given filename_suffix.
     :param filepath: full path to the file
     :param unit_factor: coefficient to apply on millimeters values in obj file. e.g. 0.001 to change to meters
     :param filename_suffix: append a suffix to the created filename
@@ -32,7 +32,7 @@ def obj_from_millimeter(filepath, unit_factor, filename_suffix):
             if line.startswith('v'):
                 values = line.split(' ')
                 xyz = np.array(values[1:], dtype=np.float)
-                ## Change millimeters to meters
+                # Change millimeters to the unit factor
                 xyz *= unit_factor
                 res = values[0] + " " + " ".join([f"{val:0.8f}" for val in xyz]) + '\n'
             f_mm.write(res)
@@ -44,3 +44,77 @@ def get_cylinder_radius_thickness(shape_type, params):
     if shape_type == 'DE':
         return int(params[-2]), int(params[-1])
     return int(params[-2]), int(params[-1])
+
+
+def get_shape_params(shape_path):
+    all = shape_path.split('/')[-1].split('.')[0].split('_')
+    shape_type = all[0]
+    params = all[1:]
+    return shape_type, params
+
+
+def get_shape_min_radius(shape_path, depth, height):
+    """
+    Get the minimum radius of the shape
+    :param SHAPE_PATH: the filepath to the shape
+    :return: the minimum radius of the shape in mm
+    """
+    shape_type, params = get_shape_params(shape_path)
+    min_radius = min(depth, height) / 2.
+    if shape_type == 'C':
+        min_radius = params[0]
+    if shape_type == 'Cone':
+        min_radius = params[0]
+    return min_radius
+
+
+def load_shape(filepath, contact_method, texture):
+    """
+    Import the mesh stored in filepath as a shape
+    :param filepath: Path to the mesh
+    :param contact_method: SMC or NSC
+    :param texture: Path to the texture .jpg
+    :return: A ChBody shape
+    """
+    shape = chrono.ChBody(contact_method)
+    shape.SetBodyFixed(True)
+    shape_mesh = chrono.ChObjShapeFile()
+    shape_mesh.SetFilename(filepath)
+    shape.AddAsset(shape_mesh)
+    tmc = chrono.ChTriangleMeshConnected()
+    tmc.LoadWavefrontMesh(filepath)
+
+    # Add a collision mesh to the shape
+    shape.GetCollisionModel().ClearModel()
+    shape.GetCollisionModel().AddTriangleMesh(tmc, True, True)
+    shape.GetCollisionModel().BuildModel()
+    shape.SetShowCollisionMesh(True)
+    shape.SetCollide(False)
+
+    # Add a skin texture
+    skin_texture = chrono.ChTexture()
+    skin_texture.SetTextureFilename(chrono.GetChronoDataPath() + texture)
+    shape.GetAssets().push_back(skin_texture)
+
+    return shape
+
+
+def build_external_cylinder(cyl_radius, shape_length, density, contact_method):
+    """
+    Build a left and right cylinder next to the shape_lenght that must be centered
+    on 0,0,0 coord system.
+    :param cyl_radius: radius of the two external cylinders
+    :param shape_length: lenght of the shape
+    :return: two ChEasyCylinder
+    """
+    height = 0.01 * shape_length
+    qCylinder = chrono.Q_from_AngX(90 * chrono.CH_C_DEG_TO_RAD)
+    left_cyl = chrono.ChBodyEasyCylinder(cyl_radius, height, density,
+                                         True, True, contact_method)
+    right_cyl = chrono.ChBodyEasyCylinder(cyl_radius, height, density,
+                                          True, True, contact_method)
+    left_cyl.SetRot(qCylinder)
+    right_cyl.SetRot(qCylinder)
+    left_cyl.SetPos(chrono.ChVectorD(0, 0, -shape_length / 2. - height))
+    right_cyl.SetPos(chrono.ChVectorD(0, 0, shape_length / 2. + height))
+    return left_cyl, right_cyl

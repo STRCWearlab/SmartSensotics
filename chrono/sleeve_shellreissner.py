@@ -26,7 +26,7 @@ class SleeveShellReissner:
     shift_y = 0
 
     def __init__(self, length, radius, na=MIN_NA, nl=MIN_NL, material=None,
-                 node_mass=10., sleeve_thickness=0.1, alphadamp=0.1,
+                 node_mass=10., sleeve_thickness=0.002, alphadamp=0.1,
                  shift_x=0, shift_y=0, shift_z=0):
         """
         Initialize a 3D cylinder mesh made of na x nl nodes.
@@ -106,6 +106,7 @@ class SleeveShellReissner:
                 if material:
                     elem.AddLayer(sleeve_thickness, 0 * chrono.CH_C_DEG_TO_RAD, material)
                     elem.SetAlphaDamp(alphadamp)
+                elem.SetAsNeutral()
 
                 self.mesh.AddElement(elem)
                 self.elements.append(elem)
@@ -135,12 +136,12 @@ class SleeveShellReissner:
             system.Add(constr)
             constr.SetConstrainedCoords(True, True, True, True, True, True)
 
-    def move(self, fns, ns, radius):
+    def move(self, fns, ns, a, b):
         i = 0
         for fn, n in zip(fns, ns):
             ca = i / self.na * 2. * math.pi  # current angle in radians
-            x = radius * math.cos(ca) + self.shift_x
-            y = radius * math.sin(ca) + self.shift_y
+            x = a * math.cos(ca) + self.shift_x
+            y = b * math.sin(ca) + self.shift_y
             n = [x, y, n[2]]
             fn.SetPos(tool.make_ChVectorD(n))
             i += 1
@@ -148,10 +149,10 @@ class SleeveShellReissner:
     def move_to_extremities(self, radius_left, radius_right):
         self.move(self.fea_nodes[:self.na],
                   self.nodes[:self.na],
-                  radius_left)
+                  radius_left, radius_left)
         self.move(self.fea_nodes[self.na * (self.nl - 1):],
                   self.nodes[self.na * (self.nl - 1):],
-                  radius_right)
+                  radius_right, radius_right)
 
     def expand(self, force):
         """
@@ -248,3 +249,49 @@ class SleeveShellReissner:
         :return:
         """
 
+    def move_to_shape_extremities(self, SHAPE_PATH, bb_dx, bb_dy, bb_dz):
+        """
+        Move the external nodes of the sleeve to the extremities of the shape
+        :param SHAPE_PATH: Path to the shape file
+        :return: nothing
+        """
+        shape_type, params = tool.get_shape_params(SHAPE_PATH)
+        min_radius = tool.get_shape_min_radius(SHAPE_PATH, bb_dz, min(bb_dx, bb_dy))
+        r_left_a, r_left_b, = min_radius, min_radius
+        r_right_a, r_right_b = min_radius, min_radius
+        if shape_type == 'Cyl':
+            r_left_a = r_left_b = r_right_a = r_right_b = bb_dx / 2.
+        if shape_type == 'Cone':
+            r_left_a = r_left_b = min_radius
+            r_right_a = r_right_b = bb_dx / 2.
+        if shape_type == 'El':
+            r_left_a, r_left_b = bb_dx / 2., bb_dy / 2.
+            r_right_a, r_right_b = bb_dx / 2., bb_dy / 2.
+        self.move(self.fea_nodes[:self.na],
+                  self.nodes[:self.na],
+                  r_left_a, r_left_b)
+        self.move(self.fea_nodes[self.na * (self.nl - 1):],
+                  self.nodes[self.na * (self.nl - 1):],
+                  r_right_a, r_right_b)
+
+    def expand_to_bb(self, bb_dx, bb_dy):
+        """
+        Expand the mesh to bounding box. Extremities are not moved
+        :param bb_dx: bounding box x dimension
+        :param bb_dy: bounding box y dimension
+        :return:
+        """
+        r = max(bb_dx, bb_dy)/2.
+        for i in range(self.na):
+            ca = i / self.na * 2. * math.pi  # current angle in radians
+            x = math.cos(ca) * r
+            y = math.sin(ca) * r
+            for j in range(1, self.nl-1):
+                z = self.nodes[j * self.na + i][2]
+                pos_vector = chrono.ChVectorD(x, y, z)
+                # Apply a force towards the outside of the sleeve
+                self.fea_nodes[j * self.na + i].SetPos(pos_vector)
+
+    def relax(self):
+        for fn in self.fea_nodes:
+            fn.Relax()
