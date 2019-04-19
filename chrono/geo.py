@@ -17,7 +17,7 @@ def node_force(nodes, edges, idx, rest_len):
     # Initiate force vector
     fv = np.zeros(3)
 
-    # Iterate the four edges
+    # Iterate the four neighbor edges
     for i in range(4):
 
         # If the edge exists
@@ -34,7 +34,7 @@ def node_force(nodes, edges, idx, rest_len):
             fd = fd / np.linalg.norm(fd)
 
             # force vector is unit vector multiplied by amplitude
-            fv = fv + fd * fa
+            fv = fv + (fd * fa)
 
     return fv
 
@@ -66,7 +66,7 @@ def edgelen(nodes, edges, idx):
     :param idx:
     :return:
     """
-    l = [None] * 4
+    length = [None] * 4
     cp = nodes[idx]  # Coordinate of current node
 
     # Iterate over all edges of the current node
@@ -77,8 +77,8 @@ def edgelen(nodes, edges, idx):
             cn = nodes[edges[idx][i]]
 
             # Edge length
-            l[i] = np.linalg.norm(cp - cn)
-    return np.array(l)
+            length[i] = np.linalg.norm(cp - cn)
+    return np.array(length)
 
 
 def edgelen_all(nodes, edges):
