@@ -11,9 +11,9 @@ The shapes files are named `{SHAPE_TYPE}_PARAM[_PARAM].obj` where `SHAPE_TYPE` i
 
 | SHAPE_TYPE | Description | PARAM | Center of Cyl. | Example |
 |---|---|---|---|---|
-| DE | Double Ellipsis  | r1_r2_r3_cylradius_cylthickness in [mm] | [r1,cylradius] | DE_12_7_8.obj |
-| CB | Cylinder Bump | r_cylradius_thickness in [mm] | [r,r] | CB_12_10_2.obj |
-| C | Regular Cylinder | `_radius` of the cylinder in [mm] | C_31.obj |
+| Cone | Conical Cylinder  | `_radius` of the smallest radius of the cone in [mm] | Given by the bounding box | Cone_31.obj |
+| E | Elliptical Cylinder | `_r1_r2` where `r1` and `r2` are respectively big and small radius of the ellipse in [mm] | [`r1`,`r2`] | E_40_25.obj |
+| C | Regular Cylinder | `_radius` of the cylinder in [mm] | [`radius`,`radius`] | C_31.obj |
 
 ## ProjectChrono
 
