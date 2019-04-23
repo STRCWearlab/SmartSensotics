@@ -39,11 +39,9 @@ NSENSORS_LENGTH = 8
 NNODES_ANGLE = NSENSORS_ANGLE * 2  # Must be a multiple of NSENSOR
 # number of nodes in the length of the sleeve, equals to the number of rings
 NNODES_LENGTH = 2+NSENSORS_LENGTH * 2  # Must be a multiple of NSENSOR
-# SHAPE_PATH = 'shapes/DE/DE_35_35_25_30_15.obj'
-# SHAPE_PATH = 'shapes/CB_60_25_15.obj'
-SHAPE_PATH = 'shapes/printed_April18/C_31.obj'
+#SHAPE_PATH = 'shapes/printed_April18/C_31.obj'
 #SHAPE_PATH = 'shapes/printed_April18/Cone_32.obj'
-#SHAPE_PATH = 'shapes/printed_April18/E_40_25.obj'
+SHAPE_PATH = 'shapes/printed_April18/E_40_25.obj'
 filename = SHAPE_PATH.split('/')[-1].split('.')[0]
 SAVE_VIDEO = False
 
@@ -170,8 +168,10 @@ cloth_mesh.AddAsset(mvisualizeClothcoll)
 viz_cloth = fea.ChVisualizationFEAmesh(cloth_mesh_apx)
 viz_cloth.SetWireframe(True)
 viz_cloth.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
+viz_cloth.SetFEMdataType(fea.ChVisualizationFEAmesh.E_PLOT_NONE)
 viz_cloth.SetSymbolsThickness(0.005)
-#viz_cloth.SetDefaultMeshColor(chrono.ChColor(0.,0.,0.))  # TODO bug lib
+#viz_cloth.SetDefaultSymbolsColor(chrono.ChColor(0.2,0.3,0.2))  # TODO bug lib
+#viz_cloth.SetDefaultMeshColor(chrono.ChColor(0.2,0.3,0.2))  # TODO bug lib
 cloth_mesh_apx.AddAsset(viz_cloth)
 
 viz_rigid_mesh = fea.ChVisualizationFEAmesh(rigid_mesh)
@@ -192,7 +192,6 @@ mysystem.AddMesh(rigid_mesh)
 # Create an Irrlicht application to visualize the system
 #
 myapplication = chronoirr.ChIrrApp(mysystem, 'Cloth Simulation', chronoirr.dimension2du(1024, 768))
-
 # myapplication.AddTypicalSky()
 # myapplication.AddTypicalLogo(chrono.GetChronoDataPath() + 'logo_pychrono_alpha.png')
 myapplication.AddTypicalSky(chrono.GetChronoDataPath() + 'skybox2/')
@@ -200,6 +199,9 @@ myapplication.AddTypicalCamera(chronoirr.vector3df(bb_dz/1.2, bb_dz / 4., bb_dz/
 myapplication.AddTypicalLights()
 #myapplication.AddTypicalLights(chronoirr.vector3df(2*bb_dz, 2*bb_dz, 2*bb_dz))
 myapplication.SetPlotCollisionShapes(False)
+myapplication.SetPlotCOGFrames(False)  # display coord system
+myapplication.SetPlotAABB(False)
+myapplication.SetShowInfos(False)
 
 # ==IMPORTANT!== Use this function for adding a ChIrrNodeAsset to all items
 # in the system. These ChIrrNodeAsset assets are 'proxies' to the Irrlicht meshes.
@@ -243,8 +245,8 @@ while myapplication.GetDevice().run():
     myapplication.EndScene()
 
     # Save figure of the shape only
-    if step == 1:
-        myapplication.SetVideoframeSave(SAVE_VIDEO)
+    #if step == 1:
+    #    myapplication.SetVideoframeSave(SAVE_VIDEO)
 
     # Release forces after some iterations (once the mesh is completely outside of the shape)
     if step == int(NNODES_ANGLE * NNODES_LENGTH / 4):

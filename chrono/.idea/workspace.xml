@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ff7ef4f9-f61b-4a60-8e49-6bbbd412e936" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chrono_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/chrono_utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pipeline_release.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipeline_release.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sleeve_shellreissner.py" beforeDir="false" afterPath="$PROJECT_DIR$/sleeve_shellreissner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/shapes/printed_April18/CCone_32.obj" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,8 +54,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/pipeline_release.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="305">
-                  <caret line="43" column="46" selection-start-line="43" selection-start-column="46" selection-end-line="43" selection-end-column="46" />
+                <state relative-caret-position="369">
+                  <caret line="135" column="38" lean-forward="true" selection-start-line="135" selection-start-column="38" selection-end-line="135" selection-end-column="38" />
                   <folding>
                     <element signature="e#745#775#0" expanded="true" />
                   </folding>
@@ -179,7 +176,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>current_nodes_pos</find>
       <find>cloth_nodes_pos</find>
       <find>fea_nodes</find>
       <find>shape_type</find>
@@ -209,6 +205,7 @@
       <find>HUMAN_DENSITY</find>
       <find>Cone</find>
       <find>factor_min_radius</find>
+      <find>video</find>
     </findStrings>
     <replaceStrings>
       <replace>self.nodes</replace>
@@ -254,7 +251,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -266,6 +262,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -464,18 +461,19 @@
       <workItem from="1555674060624" duration="114000" />
       <workItem from="1555674469635" duration="9534000" />
       <workItem from="1556008861167" duration="2585000" />
-      <workItem from="1556015125352" duration="524000" />
+      <workItem from="1556015125352" duration="3302000" />
+      <workItem from="1556019011887" duration="1214000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="234368000" />
+    <option name="totallyTimeSpent" value="238360000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1380597" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13965885" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -678,8 +676,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pipeline_release.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="43" column="46" selection-start-line="43" selection-start-column="46" selection-end-line="43" selection-end-column="46" />
+        <state relative-caret-position="369">
+          <caret line="135" column="38" lean-forward="true" selection-start-line="135" selection-start-column="38" selection-end-line="135" selection-end-column="38" />
           <folding>
             <element signature="e#745#775#0" expanded="true" />
           </folding>
