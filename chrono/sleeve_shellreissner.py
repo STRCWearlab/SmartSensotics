@@ -262,12 +262,12 @@ class SleeveShellReissner:
         min_radius = tool.get_shape_min_radius(SHAPE_PATH, bb_dz, min(bb_dx, bb_dy))
         r_left_a, r_left_b, = min_radius, min_radius
         r_right_a, r_right_b = min_radius, min_radius
-        if shape_type == 'Cyl':
+        if shape_type == 'C':
             r_left_a = r_left_b = r_right_a = r_right_b = bb_dx / 2.
         if shape_type == 'Cone':
             r_left_a = r_left_b = min_radius
             r_right_a = r_right_b = bb_dx / 2.
-        if shape_type == 'El':
+        if shape_type == 'E':
             r_left_a, r_left_b = bb_dx / 2., bb_dy / 2.
             r_right_a, r_right_b = bb_dx / 2., bb_dy / 2.
         self.move(self.fea_nodes[:self.na],

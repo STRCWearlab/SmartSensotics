@@ -42,16 +42,18 @@ NNODES_LENGTH = 2+NSENSORS_LENGTH * 2  # Must be a multiple of NSENSOR
 # SHAPE_PATH = 'shapes/DE/DE_35_35_25_30_15.obj'
 # SHAPE_PATH = 'shapes/CB_60_25_15.obj'
 SHAPE_PATH = 'shapes/printed_April18/C_31.obj'
+#SHAPE_PATH = 'shapes/printed_April18/Cone_32.obj'
+#SHAPE_PATH = 'shapes/printed_April18/E_40_25.obj'
 filename = SHAPE_PATH.split('/')[-1].split('.')[0]
 SAVE_VIDEO = False
 
 SET_MATERIAL = False  # If True, will set a skin material property to the target shape (rigid body)
 
 UNIT_FACTOR = 0.01
-factor_min_radius = 0.8
+factor_min_radius = 0.7
 metrics = ['mm', 'cm', 'dm', 'm']
 metric = metrics[int(math.fabs(round(math.log(UNIT_FACTOR, 10))))]
-HUMAN_DENSITY = 98.5  # Dkg/m^3
+HUMAN_DENSITY = 198.5  # Dkg/m^3
 # ---------------------------------------------------------------------
 #
 # Create the simulation system and add items
@@ -83,7 +85,7 @@ bbmin, bbmax = eval(str(bbmin)), eval(str(bbmax))
 bb_dx = bbmax[0] - bbmin[0]
 bb_dy = bbmax[1] - bbmin[1]
 bb_dz = bbmax[2] - bbmin[2]
-shape.SetMass(10 * HUMAN_DENSITY * bb_dx * bb_dy * bb_dz)
+shape.SetMass(100 * HUMAN_DENSITY * bb_dx * bb_dy * bb_dz)
 
 # Align shape to the center of axis system
 shape.SetPos(chrono.ChVectorD(-bb_dx / 2. - bbmin[0],
@@ -108,8 +110,8 @@ mysystem.Add(right_cyl)
 print("Create the wrapping sleeve")
 
 # Create the material property of the mesh
-rho = 152.2  # material density
-E = 8e4  # Young's modulus 11e6
+rho = 152.2  # 152.2 material density
+E = 8e4  # Young's modulus 8e4
 nu = 0.5  # 0.5  # Poisson ratio
 alpha = 1.0  # 0.3  # shear factor
 beta = 0.2  # torque factor
@@ -131,7 +133,9 @@ cloth_mesh = sleeve.get_mesh()
 
 # Add a contact surface mesh with material properties
 contact_material = chrono.ChMaterialSurfaceSMC()
-contact_material.SetFriction(0.01)
+#contact_material.SetFriction(0.1)
+#contact_material.SetAdhesion(0.5)
+contact_material.SetYoungModulus(30e5)
 sphere_swept_thickness = 0.008
 mcontact = fea.ChContactSurfaceMesh()
 cloth_mesh.AddContactSurface(mcontact)
@@ -145,7 +149,7 @@ sleeve.fix_extremities(left_cyl, right_cyl, mysystem)
 # Extend the sleeve. It will be released after some iterations.
 # sleeve.expand_to_bb(bb_dx, bb_dy)
 # TODO check for a generic way of computing the expanding force
-sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 5000000. * UNIT_FACTOR * bb_dx)
+sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 7000000. * UNIT_FACTOR * bb_dx)
 
 # ---------------------------------------------------------------------
 # FORCE DIRECT: Prepare the shapes for inverse modelling
@@ -173,7 +177,7 @@ cloth_mesh_apx.AddAsset(viz_cloth)
 viz_rigid_mesh = fea.ChVisualizationFEAmesh(rigid_mesh)
 viz_rigid_mesh.SetWireframe(True)
 viz_rigid_mesh.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
-viz_rigid_mesh.SetSymbolsThickness(2. * UNIT_FACTOR)
+viz_rigid_mesh.SetSymbolsThickness(3. * UNIT_FACTOR)
 #viz_rigid_mesh.SetDefaultSymbolsColor(chrono.ChColor(0.2, 0.2, 0.2))  # TODO bug lib
 rigid_mesh.AddAsset(viz_rigid_mesh)
 
@@ -294,8 +298,8 @@ while myapplication.GetDevice().run():
             is_inverse_modeling = True
             is_detecting_stab = False
             myapplication.SetTimestep(0.1)
-            shape.GetAssets().pop()
-            shape.GetAssets().pop()
+            #shape.GetAssets().pop()
+            #shape.GetAssets().pop()
 
     if is_inverse_modeling and len(target_nodes) > 0:
 

@@ -65,6 +65,8 @@ def get_shape_min_radius(shape_path, depth, height):
         min_radius = eval(params[0])
     if shape_type == 'Cone':
         min_radius = eval(params[0])
+    if shape_type == 'E':
+        min_radius = 1.2*eval(params[1])
     return min_radius
 
 
