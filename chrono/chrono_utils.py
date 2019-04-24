@@ -1,4 +1,5 @@
 import pychrono as chrono
+import pychrono.fea as fea
 import numpy as np
 
 
@@ -125,3 +126,12 @@ def build_external_cylinder(cyl_radius, shape_length, density, contact_method, o
     left_cyl.SetBodyFixed(True)
     right_cyl.SetBodyFixed(True)
     return left_cyl, right_cyl
+
+
+def shift_mesh(mesh, shift_x=0, shift_y=0, shift_z=0):
+    for n in mesh.GetNodes():
+        p = n.GetPos()
+        n.SetPos(chrono.ChVectorD(eval(p[0])+shift_x,
+                                  eval(p[1])+shift_y,
+                                  eval(p[2])+shift_z))
+

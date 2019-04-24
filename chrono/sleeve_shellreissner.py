@@ -202,10 +202,13 @@ class SleeveShellReissner:
             fn.SetForce(chrono.ChVectorD(0., 0., 0.))
 
     def get_sd_nodes(self, previous_nodes):
+        """
+        :param previous_nodes: the nodes positions at the previous step
+        :return: the mean standard deviation distance of all the nodes
+        """
         dist = []
         for pn, cn in zip(previous_nodes, self.nodes):
             dist.append(np.linalg.norm(pn - cn))
-        # print(sum(dist))
         return sum(dist) / len(previous_nodes)
 
     def cut_extremities(self, left, right):

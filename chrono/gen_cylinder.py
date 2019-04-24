@@ -126,7 +126,7 @@ def downsample(from_nodes, from_edges, from_na, from_nl,
     to_nodes = np.array([n for n, c in zip(from_nodes, mask) if c])
     #to_edges = [e for e, c in zip(to_edges, mask) if c]
 
-    print('# target nodes, len nodes, len edges', to_na*to_nl, len(to_nodes), len(to_edges))
-    print(to_nodes)
-    print(to_edges)
+    #print('# target nodes, len nodes, len edges', to_na*to_nl, len(to_nodes), len(to_edges))
+    #print(to_nodes)
+    #print(to_edges)
     return to_nodes, to_edges
