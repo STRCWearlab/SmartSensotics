@@ -42,8 +42,8 @@ NNODES_ANGLE = NSENSORS_ANGLE * 2  # Must be a multiple of NSENSOR
 # number of nodes in the  length of the sleeve, equals to the number of rings
 NNODES_LENGTH = 2 + NSENSORS_LENGTH * 2  # Must be a multiple of NSENSOR
 # SHAPE_PATH = 'shapes/printed_April18/C_31.obj'
-# SHAPE_PATH = 'shapes/printed_April18/Cone_32.obj'
-SHAPE_PATH = 'shapes/printed_April18/E_40_25.obj'
+SHAPE_PATH = 'shapes/printed_April18/Cone_32.obj'
+#SHAPE_PATH = 'shapes/printed_April18/E_40_25.obj'
 filename = SHAPE_PATH.split('/')[-1].split('.')[0]
 SAVE_VIDEO = False
 
@@ -216,7 +216,7 @@ myapplication = chronoirr.ChIrrApp(mysystem, 'Cloth Simulation', chronoirr.dimen
 # myapplication.AddTypicalSky()
 # myapplication.AddTypicalLogo(chrono.GetChronoDataPath() + 'logo_pychrono_alpha.png')
 myapplication.AddTypicalSky(chrono.GetChronoDataPath() + 'skybox2/')
-myapplication.AddTypicalCamera(chronoirr.vector3df(bb_dz / 1.2, bb_dz / 4., bb_dz / 1.2))
+myapplication.AddTypicalCamera(chronoirr.vector3df(-bb_dz / 1.4, bb_dy/5., bb_dz / 1.4))
 myapplication.AddTypicalLights()
 # myapplication.AddTypicalLights(chronoirr.vector3df(2*bb_dz, 2*bb_dz, 2*bb_dz))
 myapplication.SetPlotCollisionShapes(False)
@@ -260,7 +260,7 @@ cloth_edges = []
 current_cloth_nodes_pos = []
 
 # Save first image
-# myapplication.SetVideoframeSave(SAVE_VIDEO)
+myapplication.SetVideoframeSave(True)
 while myapplication.GetDevice().run():
     print('step', step)
     myapplication.BeginScene()
@@ -269,13 +269,18 @@ while myapplication.GetDevice().run():
     myapplication.EndScene()
 
     # Save figure of the shape only
-    # if step == 1:
-    #    myapplication.SetVideoframeSave(SAVE_VIDEO)
+    if step == 1:
+        myapplication.SetVideoframeSave(SAVE_VIDEO)
+
+    if step == int(NNODES_ANGLE * NNODES_LENGTH / 4) - 1:
+        myapplication.SetVideoframeSave(True)
+
 
     # Release forces after some iterations (once the mesh is completely outside of the shape)
     if step == int(NNODES_ANGLE * NNODES_LENGTH / 4):
         sleeve.release()
         shape.SetCollide(True)
+        myapplication.SetVideoframeSave(False)
 
     # Detect stabilisation of the sleeve, ie when the sleeve has draped good enough around the shape
     # Stabilization is detected when the sleeve movements are very slow.
@@ -292,6 +297,7 @@ while myapplication.GetDevice().run():
 
         # When it is stabilized
         if mean_sd < threshold:
+            myapplication.SetVideoframeSave(True)
             # Freeze the mesh
             sleeve.freeze()
 
@@ -334,6 +340,9 @@ while myapplication.GetDevice().run():
     # Apply the optimization algorithm
     if is_inverse_modeling and len(target_nodes) > 0:
 
+        if im_step == 1:
+            myapplication.SetVideoframeSave(False)
+
         print("inverse modelling")
         # Apply the force optimization algorithm and visualize each iteration
         updated_nodes_pos, fvall = shapeopt_force(current_cloth_nodes_pos, cloth_edges,
@@ -345,10 +354,14 @@ while myapplication.GetDevice().run():
         for i, (un, cn) in enumerate(zip(updated_nodes_pos, current_cloth_nodes_pos)):
             cloth_mesh_apx.AddNode(
                 fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0] - (1.1 * bb_dx), un[1], un[2])))
-            chronoirr.IVideoDriver.draw3DLine(myapplication.GetVideoDriver(),
-                                              chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
-                                              chronoirr.vector3df(un[0] - (1.1 * bb_dx), un[1], un[2]),
-                                              chronoirr.SColor(255, 255, 0, 0))
+            dr = myapplication.GetVideoDriver()
+            dr.draw3DLine(chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
+                          chronoirr.vector3df(un[0] - (1.1 * bb_dx), un[1], un[2]),
+                          chronoirr.SColor(255, 255, 0, 0))
+            # chronoirr.IVideoDriver.draw3DLine(myapplication.GetVideoDriver(),
+            #                                   chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
+            #                                   chronoirr.vector3df(un[0] - (1.1 * bb_dx), un[1], un[2]),
+            #                                   chronoirr.SColor(255, 255, 0, 0))
 
             #nss[i].SetPos(chrono.ChVectorD(un[0], un[1], un[2]))
             nss[i].Move(chrono.ChVectorD(un[0], un[1], un[2]))
@@ -358,8 +371,9 @@ while myapplication.GetDevice().run():
             # opt_path_shape.GetPathGeometry().AddSubLine(line)
         # opt_path.AddAsset(opt_path_shape)
         # lp = chrono.ChLinePath()
-        # myapplication.AssetBindAll()
-        # myapplication.AssetUpdateAll()
+        myapplication.AssetBindAll()
+        myapplication.AssetUpdateAll()
+        myapplication.DrawAll()
 
         current_cloth_nodes_pos = updated_nodes_pos.copy()
 
