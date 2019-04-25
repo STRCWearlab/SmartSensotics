@@ -45,7 +45,11 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pipeline.py">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
                 <state relative-caret-position="1410">
+=======
+                <state relative-caret-position="307">
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
                   <caret line="104" column="25" selection-start-line="104" selection-start-column="12" selection-end-line="104" selection-end-column="25" />
                   <folding>
                     <element signature="e#745#775#0" expanded="true" />
@@ -54,6 +58,7 @@
               </provider>
             </entry>
           </file>
+<<<<<<< HEAD
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/pipeline_release.py">
               <provider selected="true" editor-type-id="text-editor">
@@ -71,15 +76,33 @@
                   <folding>
                     <element signature="e#309#339#0" expanded="true" />
                   </folding>
+=======
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/pipeline_release.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="341">
+                  <caret line="356" column="42" selection-start-line="356" selection-start-column="42" selection-end-line="356" selection-end-column="42" />
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
                 </state>
               </provider>
             </entry>
           </file>
+<<<<<<< HEAD
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/pychrono/irrlicht.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="79035">
                   <caret line="5269" selection-start-line="5269" selection-end-line="5269" />
+=======
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/test.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="508">
+                  <caret line="189" column="37" selection-start-line="189" selection-start-column="37" selection-end-line="189" selection-end-column="37" />
+                  <folding>
+                    <element signature="e#309#339#0" expanded="true" />
+                  </folding>
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
                 </state>
               </provider>
             </entry>
@@ -121,6 +144,18 @@
               </provider>
             </entry>
           </file>
+<<<<<<< HEAD
+=======
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/core.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-13660">
+                  <caret line="15405" selection-start-line="15405" selection-end-line="15405" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/sleeve_shellreissner.py">
               <provider selected="true" editor-type-id="text-editor">
@@ -207,6 +242,7 @@
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/test2.py" />
         <option value="$PROJECT_DIR$/pipeline_release.py" />
+        <option value="$PROJECT_DIR$/test.py" />
       </list>
     </option>
   </component>
@@ -260,7 +296,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.pipeline_release">
+  <component name="RunManager" selected="Python.test">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="chrono" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -378,8 +414,12 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.pipeline_release" />
         <item itemvalue="Python.test" />
+        <item itemvalue="Python.pipeline_release" />
+<<<<<<< HEAD
+        <item itemvalue="Python.test" />
+=======
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
         <item itemvalue="Python.pipeline" />
         <item itemvalue="Python.sim_force" />
       </list>
@@ -412,24 +452,40 @@
       <workItem from="1556022587068" duration="17486000" />
       <workItem from="1556114820479" duration="1844000" />
       <workItem from="1556201148793" duration="4582000" />
+<<<<<<< HEAD
       <workItem from="1556209954635" duration="2055000" />
       <workItem from="1556212039727" duration="1053000" />
+=======
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="265444000" />
+=======
+    <option name="totallyTimeSpent" value="262336000" />
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1" width="1920" height="1053" extended-state="6" />
     <layout>
+<<<<<<< HEAD
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14781217" />
+=======
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1444563" />
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3290461" />
+<<<<<<< HEAD
       <window_info anchor="bottom" id="Run" order="2" weight="0.2636656" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39827773" />
+=======
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2636656" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39871383" />
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -438,7 +494,11 @@
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32917964" />
+<<<<<<< HEAD
       <window_info active="true" anchor="bottom" id="Python Console" order="12" visible="true" weight="0.2217438" />
+=======
+      <window_info anchor="bottom" id="Python Console" order="12" weight="0.22186495" />
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -451,9 +511,13 @@
     <option name="version" value="1" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+<<<<<<< HEAD
     <SUITE FILE_PATH="coverage/chrono$pipeline_release.coverage" NAME="pipeline_release Coverage Results" MODIFIED="1556212391888" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/chrono$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1556211385255" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/chrono$test.coverage" NAME="test Coverage Results" MODIFIED="1556210365252" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+=======
+    <SUITE FILE_PATH="coverage/chrono$test.coverage" NAME="test Coverage Results" MODIFIED="1556206109652" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/tutorials/tuto3.py" />
@@ -502,6 +566,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/IPython/core/interactiveshell.py" />
     <entry file="file://$PROJECT_DIR$/shapeopt_force.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -512,6 +577,15 @@
     </entry>
     <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/core.py" />
     <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/irrlicht.py" />
+=======
+    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/IPython/core/interactiveshell.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="660">
+          <caret line="3295" selection-start-line="3295" selection-end-line="3295" />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
     <entry file="file://$PROJECT_DIR$/cloth_simulation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1230">
@@ -522,6 +596,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/pipeline.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1410">
@@ -546,6 +621,8 @@
         </state>
       </provider>
     </entry>
+=======
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
     <entry file="file://$PROJECT_DIR$/gen_cylinder.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="48">
@@ -583,6 +660,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="370">
@@ -590,13 +668,58 @@
           <folding>
             <element signature="e#309#339#0" expanded="true" />
           </folding>
+=======
+    <entry file="file://$PROJECT_DIR$/shapeopt_force.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="28" column="27" selection-start-line="28" selection-start-column="27" selection-end-line="28" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipeline.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="307">
+          <caret line="104" column="25" selection-start-line="104" selection-start-column="12" selection-end-line="104" selection-end-column="25" />
+          <folding>
+            <element signature="e#745#775#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/core.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-13660">
+          <caret line="15405" selection-start-line="15405" selection-end-line="15405" />
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pipeline_release.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="554">
           <caret line="413" column="15" selection-start-line="413" selection-start-column="8" selection-end-line="413" selection-end-column="15" />
+=======
+        <state relative-caret-position="341">
+          <caret line="356" column="42" selection-start-line="356" selection-start-column="42" selection-end-line="356" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/irrlicht.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="5882" column="8" selection-start-line="5882" selection-start-column="8" selection-end-line="5882" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="508">
+          <caret line="189" column="37" selection-start-line="189" selection-start-column="37" selection-end-line="189" selection-end-column="37" />
+          <folding>
+            <element signature="e#309#339#0" expanded="true" />
+          </folding>
+>>>>>>> f356c5eb6922e534984817ce0b6610d3ebf8d9b5
         </state>
       </provider>
     </entry>
