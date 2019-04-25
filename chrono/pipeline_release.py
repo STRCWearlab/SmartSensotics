@@ -345,10 +345,14 @@ while myapplication.GetDevice().run():
         for i, (un, cn) in enumerate(zip(updated_nodes_pos, current_cloth_nodes_pos)):
             cloth_mesh_apx.AddNode(
                 fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0] - (1.1 * bb_dx), un[1], un[2])))
-            chronoirr.IVideoDriver.draw3DLine(myapplication.GetVideoDriver(),
-                                              chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
-                                              chronoirr.vector3df(un[0] - (1.1 * bb_dx), un[1], un[2]),
-                                              chronoirr.SColor(255, 255, 0, 0))
+            dr = myapplication.GetVideoDriver()
+            dr.draw3DLine(chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
+                          chronoirr.vector3df(un[0] - (1.1 * bb_dx), un[1], un[2]),
+                          chronoirr.SColor(255, 255, 0, 0))
+            # chronoirr.IVideoDriver.draw3DLine(myapplication.GetVideoDriver(),
+            #                                   chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
+            #                                   chronoirr.vector3df(un[0] - (1.1 * bb_dx), un[1], un[2]),
+            #                                   chronoirr.SColor(255, 255, 0, 0))
 
             #nss[i].SetPos(chrono.ChVectorD(un[0], un[1], un[2]))
             nss[i].Move(chrono.ChVectorD(un[0], un[1], un[2]))
@@ -358,8 +362,9 @@ while myapplication.GetDevice().run():
             # opt_path_shape.GetPathGeometry().AddSubLine(line)
         # opt_path.AddAsset(opt_path_shape)
         # lp = chrono.ChLinePath()
-        # myapplication.AssetBindAll()
-        # myapplication.AssetUpdateAll()
+        myapplication.AssetBindAll()
+        myapplication.AssetUpdateAll()
+        myapplication.DrawAll()
 
         current_cloth_nodes_pos = updated_nodes_pos.copy()
 
