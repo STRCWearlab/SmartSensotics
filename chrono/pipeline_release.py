@@ -103,7 +103,6 @@ left_cyl, right_cyl = tool.build_external_cylinder(factor_min_radius * min_radiu
                                                    HUMAN_DENSITY, contact_method, offset)
 mysystem.Add(left_cyl)
 mysystem.Add(right_cyl)
-
 # ---------------------------------------------------------------------
 #
 # Create the wrapping sleeve.
@@ -166,17 +165,17 @@ opt_path.SetBodyFixed(True)
 mysystem.Add(opt_path)
 
 # TEST track path of nodes with ChBodyEasySphere()
-nss = []
-pps = []
-for i in range(NSENSORS_LENGTH):
-    for j in range(NSENSORS_ANGLE):
-        ns = chrono.ChBodyEasySphere(0.01, 1., False, True)
-        ns.SetBodyFixed(True)
-        ps = chrono.ChPointPointSegment()
-        ps.SetColor(chrono.ChColor(1.,0.,0.))
-        ns.AddAsset(ps)
-        nss.append(ns)
-        mysystem.Add(ns)
+# nss = []
+# pps = []
+# for i in range(NSENSORS_LENGTH):
+#     for j in range(NSENSORS_ANGLE):
+#         ns = chrono.ChBodyEasySphere(0.01, 1., False, True)
+#         ns.SetBodyFixed(True)
+#         ps = chrono.ChPointPointSegment()
+#         ps.SetColor(chrono.ChColor(1.,0.,0.))
+#         ns.AddAsset(ps)
+#         nss.append(ns)
+#         mysystem.Add(ns)
 
 # # ---------------------------------------------------------------------
 # # VISUALIZATION
@@ -246,7 +245,7 @@ myapplication.SetTimestep(0.001)
 
 step = 0
 im_step = 0  # inverse modelling steps
-threshold = 0.0001  # minimum value to detect stabilization
+threshold = 0.00007  # minimum value to detect stabilization
 # minimum length to be reached by the optimization algorithm to detect stabilization
 inv_mod_threshold = 0.001
 
@@ -272,9 +271,9 @@ while myapplication.GetDevice().run():
     if step == 1:
         myapplication.SetVideoframeSave(SAVE_VIDEO)
 
+    # Save figure once it is expanded
     if step == int(NNODES_ANGLE * NNODES_LENGTH / 4) - 1:
         myapplication.SetVideoframeSave(True)
-
 
     # Release forces after some iterations (once the mesh is completely outside of the shape)
     if step == int(NNODES_ANGLE * NNODES_LENGTH / 4):
@@ -297,6 +296,10 @@ while myapplication.GetDevice().run():
 
         # When it is stabilized
         if mean_sd < threshold:
+
+            # Remove the fixed disks
+
+
             myapplication.SetVideoframeSave(True)
             # Freeze the mesh
             sleeve.freeze()
@@ -324,17 +327,19 @@ while myapplication.GetDevice().run():
 
             # Initial position of the nodes to optimize
             for i, cn in enumerate(cloth_nodes):
-                fea_node = fea.ChNodeFEAxyzD(chrono.ChVectorD(cn[0] - (1.1 * bb_dx), cn[1], cn[2]))
+                fea_node = fea.ChNodeFEAxyzD(chrono.ChVectorD(cn[0], cn[1], cn[2]))
                 fea_node.SetMass(node_mass)
                 cloth_mesh_apx.AddNode(fea_node)
 
                 # Test with bodysphere nodes
-                nss[i].SetPos(chrono.ChVectorD(cn[0], cn[1], cn[2]))
+                #nss[i].SetPos(chrono.ChVectorD(cn[0], cn[1], cn[2]))
 
             is_inverse_modeling = True
             is_detecting_stab = False
             myapplication.SetTimestep(0.1)
-            # shape.GetAssets().pop()
+
+            #
+            #shape.GetAssets().pop()
             # shape.GetAssets().pop()
 
     # Apply the optimization algorithm
@@ -353,10 +358,10 @@ while myapplication.GetDevice().run():
         opt_path_shape = chrono.ChPathShape()
         for i, (un, cn) in enumerate(zip(updated_nodes_pos, current_cloth_nodes_pos)):
             cloth_mesh_apx.AddNode(
-                fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0] - (1.1 * bb_dx), un[1], un[2])))
+                fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0], un[1], un[2])))
             dr = myapplication.GetVideoDriver()
-            dr.draw3DLine(chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
-                          chronoirr.vector3df(un[0] - (1.1 * bb_dx), un[1], un[2]),
+            dr.draw3DLine(chronoirr.vector3df(cn[0], cn[1], cn[2]),
+                          chronoirr.vector3df(un[0], un[1], un[2]),
                           chronoirr.SColor(255, 255, 0, 0))
             # chronoirr.IVideoDriver.draw3DLine(myapplication.GetVideoDriver(),
             #                                   chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
@@ -364,7 +369,7 @@ while myapplication.GetDevice().run():
             #                                   chronoirr.SColor(255, 255, 0, 0))
 
             #nss[i].SetPos(chrono.ChVectorD(un[0], un[1], un[2]))
-            nss[i].Move(chrono.ChVectorD(un[0], un[1], un[2]))
+            #nss[i].Move(chrono.ChVectorD(un[0], un[1], un[2]))
 
             # line = chrono.ChLineSegment(chrono.ChVectorD(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
             #                            chrono.ChVectorD(un[0] - (1.1 * bb_dx), un[1], un[2]))
@@ -407,9 +412,9 @@ while myapplication.GetDevice().run():
             # print(target_shape_edgelen_all)
 
             # Move optimised shape aside to compare it with the target shape
-            for un in current_cloth_nodes_pos:
-                rigid_mesh.AddNode(
-                    fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0] - (1.1 * bb_dx), un[1], un[2])))
+            #for un in current_cloth_nodes_pos:
+            #    rigid_mesh.AddNode(
+            #        fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0], un[1], un[2])))
 
         im_step += 1
 
