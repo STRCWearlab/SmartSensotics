@@ -116,9 +116,9 @@ def build_external_cylinder(cyl_radius, shape_length, density, contact_method, o
     height = 0.01 * shape_length
     qCylinder = chrono.Q_from_AngX(90 * chrono.CH_C_DEG_TO_RAD)
     left_cyl = chrono.ChBodyEasyCylinder(cyl_radius, height, density,
-                                         True, True, contact_method)
+                                         True, False, contact_method)
     right_cyl = chrono.ChBodyEasyCylinder(cyl_radius, height, density,
-                                          True, True, contact_method)
+                                          True, False, contact_method)
     left_cyl.SetRot(qCylinder)
     right_cyl.SetRot(qCylinder)
     left_cyl.SetPos(chrono.ChVectorD(0, 0, -(shape_length / 2. + offset)))
@@ -135,3 +135,29 @@ def shift_mesh(mesh, shift_x=0, shift_y=0, shift_z=0):
                                   eval(p[1])+shift_y,
                                   eval(p[2])+shift_z))
 
+
+def viz_target_edges(mesh, fea_nodes, edges):
+    """
+    Build visual edges between the given nodes according to edges structure
+    :param mesh: the mesh to atatch the elements to
+    :param fea_nodes: chrono nodes
+    :param edges: edges structure
+    :return: chrono edges
+    """
+    section = fea.ChBeamSectionAdvanced()
+    beam_wy = 0.01
+    beam_wz = 0.01
+    section.SetAsRectangularSection(beam_wy, beam_wz)
+    for nidx, edge in enumerate(edges):
+        print(nidx, edge)
+        for n in edge:
+            # nidx is the current node, n is its neighbor
+            # Add an edge between nidx and n if n exists
+            print('n=',n)
+            if n > -1:
+                e = fea.ChElementBeamEuler()
+                e.SetNodes(fea_nodes[nidx], fea_nodes[n])
+                e.SetSection(section)
+                mesh.AddElement(e)
+        if nidx==6:
+            break

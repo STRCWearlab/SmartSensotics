@@ -98,7 +98,7 @@ mysystem.Add(shape)
 #
 # Add fixed extremities to the shape in order to fix the future mesh.
 min_radius = tool.get_shape_min_radius(SHAPE_PATH, bb_dx, bb_dy) * UNIT_FACTOR
-offset = 0.05 * bb_dz
+offset = 0.02 * bb_dz
 left_cyl, right_cyl = tool.build_external_cylinder(factor_min_radius * min_radius, bb_dz,
                                                    HUMAN_DENSITY, contact_method, offset)
 mysystem.Add(left_cyl)
@@ -121,7 +121,7 @@ cloth_length = bb_dz + 2 * offset
 cloth_radius = factor_min_radius * min_radius
 node_mass = 0.1
 sleeve_thickness = 0.015
-alphadamp = 0.08
+alphadamp = 0.05
 sleeve = SleeveShellReissner(cloth_length, cloth_radius, NNODES_ANGLE, NNODES_LENGTH,
                              cloth_material, node_mass, sleeve_thickness, alphadamp,
                              shift_z=-bb_dz / 2. - offset)
@@ -160,9 +160,9 @@ cloth_mesh_apx = fea.ChMesh()
 
 # TEST track path of nodes
 # The path of the optimised mesh
-opt_path = chrono.ChBody()
-opt_path.SetBodyFixed(True)
-mysystem.Add(opt_path)
+# opt_path = chrono.ChBody()
+# opt_path.SetBodyFixed(True)
+# mysystem.Add(opt_path)
 
 # TEST track path of nodes with ChBodyEasySphere()
 # nss = []
@@ -183,7 +183,7 @@ mvisualizeClothcoll = fea.ChVisualizationFEAmesh(cloth_mesh)
 mvisualizeClothcoll.SetWireframe(True)
 mvisualizeClothcoll.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
 mvisualizeClothcoll.SetSymbolsThickness(1. * UNIT_FACTOR)
-cloth_mesh.AddAsset(mvisualizeClothcoll)
+#cloth_mesh.AddAsset(mvisualizeClothcoll)
 
 viz_cloth = fea.ChVisualizationFEAmesh(cloth_mesh_apx)
 viz_cloth.SetWireframe(True)
@@ -195,11 +195,17 @@ viz_cloth.SetSymbolsThickness(0.005)
 cloth_mesh_apx.AddAsset(viz_cloth)
 
 viz_rigid_mesh = fea.ChVisualizationFEAmesh(rigid_mesh)
-viz_rigid_mesh.SetWireframe(True)
 viz_rigid_mesh.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
-viz_rigid_mesh.SetSymbolsThickness(3. * UNIT_FACTOR)
+viz_rigid_mesh.SetSymbolsThickness(2. * UNIT_FACTOR)
 # viz_rigid_mesh.SetDefaultSymbolsColor(chrono.ChColor(0.2, 0.2, 0.2))  # TODO bug lib
 rigid_mesh.AddAsset(viz_rigid_mesh)
+
+viz_rigid_mesh_beam = fea.ChVisualizationFEAmesh(rigid_mesh)
+viz_rigid_mesh_beam.SetFEMdataType(fea.ChVisualizationFEAmesh.E_PLOT_ELEM_BEAM_MZ)
+viz_rigid_mesh_beam.SetColorscaleMinMax(-0.4, 0.4)
+viz_rigid_mesh_beam.SetSmoothFaces(True)
+viz_rigid_mesh_beam.SetWireframe(False)
+rigid_mesh.AddAsset(viz_rigid_mesh_beam)
 
 # Add mesh to the system
 # cloth_mesh.SetAutomaticGravity(False)
@@ -211,11 +217,11 @@ mysystem.AddMesh(rigid_mesh)
 # IRRLICHT
 # Create an Irrlicht application to visualize the system
 #
-myapplication = chronoirr.ChIrrApp(mysystem, 'Cloth Simulation', chronoirr.dimension2du(1024, 768))
-# myapplication.AddTypicalSky()
+myapplication = chronoirr.ChIrrApp(mysystem, 'Cloth Simulation', chronoirr.dimension2du(1920, 1080))
 # myapplication.AddTypicalLogo(chrono.GetChronoDataPath() + 'logo_pychrono_alpha.png')
 myapplication.AddTypicalSky(chrono.GetChronoDataPath() + 'skybox2/')
-myapplication.AddTypicalCamera(chronoirr.vector3df(-bb_dz / 1.4, bb_dy/5., bb_dz / 1.4))
+#myapplication.AddTypicalCamera(chronoirr.vector3df(bb_dz / 1.4, bb_dy/5., bb_dz / 1.4))
+myapplication.AddTypicalCamera(chronoirr.vector3df(bb_dz/1.2, 0., 0.))
 myapplication.AddTypicalLights()
 # myapplication.AddTypicalLights(chronoirr.vector3df(2*bb_dz, 2*bb_dz, 2*bb_dz))
 myapplication.SetPlotCollisionShapes(False)
@@ -245,12 +251,12 @@ myapplication.SetTimestep(0.001)
 
 step = 0
 im_step = 0  # inverse modelling steps
-threshold = 0.00007  # minimum value to detect stabilization
+threshold = 0.00007 #0.00007  # minimum value to detect stabilization
 # minimum length to be reached by the optimization algorithm to detect stabilization
 inv_mod_threshold = 0.001
 
 is_inverse_modeling = False
-is_detecting_stab = True
+is_detecting_stab = False
 is_inv_mod_stabilized = False
 target_nodes = []
 target_edges = []
@@ -279,6 +285,7 @@ while myapplication.GetDevice().run():
     if step == int(NNODES_ANGLE * NNODES_LENGTH / 4):
         sleeve.release()
         shape.SetCollide(True)
+        is_detecting_stab = True
         myapplication.SetVideoframeSave(False)
 
     # Detect stabilisation of the sleeve, ie when the sleeve has draped good enough around the shape
@@ -286,6 +293,7 @@ while myapplication.GetDevice().run():
     # we extract the position of the resulting nodes and set this as the target shape to approximate
     if is_detecting_stab:
         print("Detecting stabilization...")
+
         previous_nodes = sleeve.nodes.copy()
 
         # Set reference position of nodes as current position, for all nodes
@@ -297,32 +305,39 @@ while myapplication.GetDevice().run():
         # When it is stabilized
         if mean_sd < threshold:
 
-            # Remove the fixed disks
-
-
             myapplication.SetVideoframeSave(True)
             # Freeze the mesh
             sleeve.freeze()
 
-            # Cut the extremities of the mesh getting outside of the shape
+            # Remove collision detection
+            shape.SetCollide(False)
+            cloth_mesh.ClearContactSurfaces()
+            cloth_mesh.GetAssets().pop()
+
+            # Cut the extremities of the mesh where it is outside of the shape
             left = -bb_dz / 2.
             right = bb_dz / 2.
             target_nodes, target_edges, target_na, target_nl = sleeve.cut_extremities(left, right)
 
-            # Downsample the mesh to match the number of real sensors
+            # Downsample the mesh to match the number of sensors
             target_nodes, target_edges = downsample(target_nodes, target_edges,
                                                     target_na, target_nl,
                                                     NSENSORS_ANGLE, NSENSORS_LENGTH)
 
             # Visualize the target nodes (bigger nodes)
+            fea_nodes = []
+            noderot = chrono.ChQuaternionD(chrono.QUNIT)
             for tn in target_nodes:
-                fea_node = fea.ChNodeFEAxyzD(chrono.ChVectorD(tn[0], tn[1], tn[2]))
+                fea_node = fea.ChNodeFEAxyzrot(chrono.ChFrameD(chrono.ChVectorD(tn[0], tn[1], tn[2]), noderot))
+                fea_nodes.append(fea_node)
                 rigid_mesh.AddNode(fea_node)
+            # Visualize the target edges
+            #tool.viz_target_edges(rigid_mesh, fea_nodes, target_edges)
 
             # Generate the optimised shape (cloth)
-            cloth_nodes, cloth_edges = gen_cylinder(bb_dx, 1.2 * bb_dz,
+            cloth_nodes, cloth_edges = gen_cylinder(bb_dx, bb_dz,
                                                     NSENSORS_ANGLE, NSENSORS_LENGTH,
-                                                    shift_z=-1.2 * bb_dz / 2.)
+                                                    shift_z=-bb_dz / 2.)
             current_cloth_nodes_pos = cloth_nodes.copy()
 
             # Initial position of the nodes to optimize
@@ -331,90 +346,75 @@ while myapplication.GetDevice().run():
                 fea_node.SetMass(node_mass)
                 cloth_mesh_apx.AddNode(fea_node)
 
-                # Test with bodysphere nodes
-                #nss[i].SetPos(chrono.ChVectorD(cn[0], cn[1], cn[2]))
-
             is_inverse_modeling = True
             is_detecting_stab = False
             myapplication.SetTimestep(0.1)
 
-            #
-            #shape.GetAssets().pop()
-            # shape.GetAssets().pop()
-
     # Apply the optimization algorithm
     if is_inverse_modeling and len(target_nodes) > 0:
 
-        if im_step == 1:
-            myapplication.SetVideoframeSave(False)
+        if im_step > 0:
+            #myapplication.SetVideoframeSave(False)
 
-        print("inverse modelling")
-        # Apply the force optimization algorithm and visualize each iteration
-        updated_nodes_pos, fvall = shapeopt_force(current_cloth_nodes_pos, cloth_edges,
-                                                  target_nodes, target_edges)
+            print("inverse modelling")
+            # Apply the force optimization algorithm and visualize each iteration
+            updated_nodes_pos, fvall = shapeopt_force(current_cloth_nodes_pos, cloth_edges,
+                                                      target_nodes, target_edges)
 
-        # Add a node to update visually the position of the nodes
-        # Move optimised shape aside to compare shapes with the target shape
-        opt_path_shape = chrono.ChPathShape()
-        for i, (un, cn) in enumerate(zip(updated_nodes_pos, current_cloth_nodes_pos)):
-            cloth_mesh_apx.AddNode(
-                fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0], un[1], un[2])))
-            dr = myapplication.GetVideoDriver()
-            dr.draw3DLine(chronoirr.vector3df(cn[0], cn[1], cn[2]),
-                          chronoirr.vector3df(un[0], un[1], un[2]),
-                          chronoirr.SColor(255, 255, 0, 0))
-            # chronoirr.IVideoDriver.draw3DLine(myapplication.GetVideoDriver(),
-            #                                   chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
-            #                                   chronoirr.vector3df(un[0] - (1.1 * bb_dx), un[1], un[2]),
-            #                                   chronoirr.SColor(255, 255, 0, 0))
+            # Add a node to update visually the position of the nodes
+            # Move optimised shape aside to compare shapes with the target shape
+            opt_path_shape = chrono.ChPathShape()
+            for i, (un, cn) in enumerate(zip(updated_nodes_pos, current_cloth_nodes_pos)):
+                cloth_mesh_apx.AddNode(
+                    fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0], un[1], un[2])))
+                dr = myapplication.GetVideoDriver()
+                dr.draw3DLine(chronoirr.vector3df(cn[0], cn[1], cn[2]),
+                              chronoirr.vector3df(un[0], un[1], un[2]),
+                              chronoirr.SColor(255, 255, 0, 0))
+                # chronoirr.IVideoDriver.draw3DLine(myapplication.GetVideoDriver(),
+                #                                   chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
+                #                                   chronoirr.vector3df(un[0] - (1.1 * bb_dx), un[1], un[2]),
+                #                                   chronoirr.SColor(255, 255, 0, 0))
 
-            #nss[i].SetPos(chrono.ChVectorD(un[0], un[1], un[2]))
-            #nss[i].Move(chrono.ChVectorD(un[0], un[1], un[2]))
+            myapplication.AssetBindAll()
+            myapplication.AssetUpdateAll()
+            myapplication.DrawAll()
 
-            # line = chrono.ChLineSegment(chrono.ChVectorD(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
-            #                            chrono.ChVectorD(un[0] - (1.1 * bb_dx), un[1], un[2]))
-            # opt_path_shape.GetPathGeometry().AddSubLine(line)
-        # opt_path.AddAsset(opt_path_shape)
-        # lp = chrono.ChLinePath()
-        myapplication.AssetBindAll()
-        myapplication.AssetUpdateAll()
-        myapplication.DrawAll()
+            current_cloth_nodes_pos = updated_nodes_pos.copy()
 
-        current_cloth_nodes_pos = updated_nodes_pos.copy()
+            # Detect stabilization of inverse modelling
+            # The stabilization is reached when the edges length of the optimised shape are reaching
+            # the one of the target shape.
+            opt_shape_edgelen_all = geo.edgelen_all(current_cloth_nodes_pos, cloth_edges).flatten()
+            target_shape_edgelen_all = geo.edgelen_all(target_nodes, target_edges).flatten()
+            opt_shape_edgelen_all = [e if e else 0 for e in opt_shape_edgelen_all]
+            target_shape_edgelen_all = [e if e else 0 for e in target_shape_edgelen_all]
+            delta_length = np.subtract(opt_shape_edgelen_all, target_shape_edgelen_all)
+            is_inv_mod_stabilized = True
+            for dl in delta_length:
+                print('dl', dl)
+                if dl is not None:
+                    if math.fabs(dl) > inv_mod_threshold:
+                        is_inv_mod_stabilized = False
+                        break
 
-        # Detect stabilization of inverse modelling
-        # The stabilization is reached when the edges length of the optimised shape are reaching
-        # the one of the target shape.
-        opt_shape_edgelen_all = geo.edgelen_all(current_cloth_nodes_pos, cloth_edges).flatten()
-        target_shape_edgelen_all = geo.edgelen_all(target_nodes, target_edges).flatten()
-        opt_shape_edgelen_all = [e if e else 0 for e in opt_shape_edgelen_all]
-        target_shape_edgelen_all = [e if e else 0 for e in target_shape_edgelen_all]
-        delta_length = np.subtract(opt_shape_edgelen_all, target_shape_edgelen_all)
-        is_inv_mod_stabilized = True
-        for dl in delta_length:
-            print('dl', dl)
-            if dl is not None:
-                if math.fabs(dl) > inv_mod_threshold:
-                    is_inv_mod_stabilized = False
-                    break
+            if is_inv_mod_stabilized:
+                is_inverse_modeling = False
+                myapplication.SetVideoframeSave(False)  # Stop filming
 
-        if is_inv_mod_stabilized:
-            is_inverse_modeling = False
-            myapplication.SetVideoframeSave(False)  # Stop filming
+                # Print edge length
+                # opt_shape_edgelen_all = geo.edgelen_all(current_cloth_nodes_pos, cloth_edges)
+                # target_shape_edgelen_all = geo.edgelen_all(target_nodes, target_edges)
+                # print('opt_shape_edgelen_all')
+                # print(opt_shape_edgelen_all)
+                #
+                # print('target_shape_edgelen_all')
+                # print(target_shape_edgelen_all)
 
-            # Print edge length
-            # opt_shape_edgelen_all = geo.edgelen_all(current_cloth_nodes_pos, cloth_edges)
-            # target_shape_edgelen_all = geo.edgelen_all(target_nodes, target_edges)
-            # print('opt_shape_edgelen_all')
-            # print(opt_shape_edgelen_all)
-            #
-            # print('target_shape_edgelen_all')
-            # print(target_shape_edgelen_all)
-
-            # Move optimised shape aside to compare it with the target shape
-            #for un in current_cloth_nodes_pos:
-            #    rigid_mesh.AddNode(
-            #        fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0], un[1], un[2])))
+                # Move optimised shape aside to compare it with the target shape
+                #for un in current_cloth_nodes_pos:
+                #    rigid_mesh.AddNode(
+                #        fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0], un[1], un[2])))
 
         im_step += 1
 
