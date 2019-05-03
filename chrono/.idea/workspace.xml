@@ -2,16 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff7ef4f9-f61b-4a60-8e49-6bbbd412e936" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/reconstruct_shape.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/chrono.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/chrono.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/edge_neighbourhood.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/reconstruct_shape_energy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shape_energy.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chrono_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/chrono_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloth_simulation.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/cone_5_opt.svg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/cone_5_opt.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen_cylinder.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen_cylinder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/geo.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pipeline.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pipeline_release.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipeline_release.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reconstruct_shape.py" beforeDir="false" afterPath="$PROJECT_DIR$/reconstruct_shape_naive.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shapeopt_force.py" beforeDir="false" afterPath="$PROJECT_DIR$/shapeopt_force.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sim_force.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sleeve_brick.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sleeve_shellreissner.py" beforeDir="false" afterPath="$PROJECT_DIR$/sleeve_shellreissner.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/skybox2/sky_dn.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../data/skybox2/sky_dn.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/skybox2/sky_lf.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../data/skybox2/sky_lf.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/skybox2/sky_up.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../data/skybox2/sky_up.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tutofea.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,62 +39,47 @@
     <SUITE FILE_PATH="coverage/chrono$pipeline.coverage" NAME="pipeline Coverage Results" MODIFIED="1555663792078" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.49812734">
+    <splitter split-orientation="horizontal" split-proportion="0.56554306">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/cloth_simulation.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret line="88" column="28" selection-start-line="88" selection-start-column="28" selection-end-line="88" selection-end-column="28" />
-                  <folding>
-                    <element signature="e#309#339#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/pipeline.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="723">
-                  <caret line="106" column="28" lean-forward="true" selection-start-line="106" selection-start-column="28" selection-end-line="106" selection-end-column="28" />
-                  <folding>
-                    <element signature="e#745#775#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/pipeline_release.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="336">
-                  <caret line="54" column="66" lean-forward="true" selection-start-line="54" selection-start-column="66" selection-end-line="55" selection-end-column="32" />
-                  <folding>
-                    <element signature="e#745#763#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/test.py">
+            <entry file="file://$PROJECT_DIR$/reconstruct_shape_energy.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="91">
-                  <caret line="60" column="6" lean-forward="true" selection-start-line="60" selection-start-column="6" selection-end-line="60" selection-end-column="6" />
+                <state relative-caret-position="271">
+                  <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
                   <folding>
-                    <element signature="e#309#339#0" expanded="true" />
+                    <element signature="e#0#25#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/shapeopt_force.py">
+            <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/irrlicht.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="207">
-                  <caret line="13" selection-start-line="13" selection-end-line="13" />
+                <state relative-caret-position="248">
+                  <caret line="6277" column="135" selection-start-line="6277" selection-start-column="122" selection-end-line="6277" selection-end-column="135" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/chrono_utils.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-340">
+                  <caret line="73" column="4" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="4" />
+                  <folding>
+                    <element signature="e#0#25#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/scipy/optimize/optimize.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="595">
+                  <caret line="919" column="28" selection-start-line="919" selection-start-column="24" selection-end-line="919" selection-end-column="28" />
                 </state>
               </provider>
             </entry>
@@ -96,11 +88,11 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/gen_cylinder.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1088">
-                  <caret line="4" column="16" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="16" />
+                <state relative-caret-position="309">
+                  <caret line="24" column="4" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
                   <folding>
                     <element signature="e#0#11#0" expanded="true" />
                   </folding>
@@ -109,55 +101,43 @@
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/pipeline_release.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="199">
+                  <caret line="310" column="28" selection-start-line="310" selection-start-column="28" selection-end-line="310" selection-end-column="28" />
+                  <folding>
+                    <element signature="e#644#662#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/geo.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="481">
-                  <caret line="94" selection-start-line="94" selection-end-line="94" />
+                <state relative-caret-position="216">
+                  <caret line="79" selection-start-line="79" selection-end-line="79" />
                 </state>
               </provider>
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/chrono_utils.py">
+            <entry file="file://$PROJECT_DIR$/shape_energy.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="545">
-                  <caret line="162" column="17" selection-start-line="162" selection-start-column="17" selection-end-line="162" selection-end-column="17" />
+                <state relative-caret-position="288">
+                  <caret line="18" selection-start-line="18" selection-end-line="18" />
                   <folding>
-                    <element signature="e#0#25#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/reconstruct_shape.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="148">
-                  <caret line="192" column="34" selection-start-line="192" selection-start-column="34" selection-end-line="192" selection-end-column="34" />
-                  <folding>
-                    <element signature="e#309#339#0" expanded="true" />
+                    <element signature="e#0#18#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tutofea.py">
+            <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/numpy/core/fromnumeric.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="192">
-                  <caret line="39" column="12" selection-start-line="39" selection-start-column="12" selection-end-line="39" selection-end-column="12" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/sleeve_shellreissner.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1248">
-                  <caret line="111" column="42" lean-forward="true" selection-start-line="82" selection-start-column="8" selection-end-line="111" selection-end-column="42" />
-                  <folding>
-                    <element signature="e#0#25#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="56">
+                  <caret line="197" column="4" selection-start-line="197" selection-start-column="4" selection-end-line="197" selection-end-column="4" />
                 </state>
               </provider>
             </entry>
@@ -175,36 +155,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>gen_cylinder</find>
-      <find>cloth_fea_nodes</find>
-      <find>target_nodes</find>
-      <find>SAVE</find>
-      <find>bb_</find>
-      <find>draw</find>
-      <find>dra</find>
-      <find>chronoirr</find>
-      <find>vector3df</find>
-      <find>SColor</find>
-      <find>draw3D</find>
-      <find>contactsD</find>
-      <find>ChVector</find>
-      <find>RemoveBody</find>
-      <find>cloth_mesh.</find>
-      <find>fea_nodes</find>
       <find>+[0-9]+\n</find>
       <find>drawSe</find>
       <find>cloth_mesh</find>
       <find>SetVideoframeSave</find>
       <find>im_step</find>
       <find>cloth_mesh_apx</find>
-      <find>left_cyl</find>
       <find>mysystem</find>
       <find>remo</find>
       <find>disk</find>
       <find>i</find>
       <find>j</find>
-      <find>self.</find>
       <find>material</find>
+      <find>sleeve</find>
+      <find>gen_cylinder</find>
+      <find>gen_cyl</find>
+      <find>self.</find>
+      <find>left_cyl</find>
+      <find>metric</find>
+      <find>gen</find>
+      <find>dz</find>
+      <find>min_radius</find>
+      <find>offset</find>
+      <find>UNIT_FA</find>
+      <find>filenam</find>
+      <find>inf_mesh_big</find>
+      <find>setrot</find>
+      <find>nodes_inf</find>
+      <find>nodes_inf_final2</find>
+      <find>nodes_inf_all</find>
+      <find>nodes_inf_final</find>
     </findStrings>
     <replaceStrings>
       <replace>self.nodes</replace>
@@ -226,25 +206,29 @@
         <option value="$PROJECT_DIR$/sleeve.py" />
         <option value="$PROJECT_DIR$/sleeveshellreissner.py" />
         <option value="$PROJECT_DIR$/sleeve_brick.py" />
-        <option value="$PROJECT_DIR$/sim_force.py" />
-        <option value="$PROJECT_DIR$/cloth_simulation.py" />
-        <option value="$PROJECT_DIR$/geo.py" />
         <option value="$PROJECT_DIR$/shape.py" />
         <option value="$PROJECT_DIR$/pipeline.py" />
-        <option value="$PROJECT_DIR$/gen_cylinder.py" />
-        <option value="$PROJECT_DIR$/shapeopt_force.py" />
-        <option value="$PROJECT_DIR$/sleeve_shellreissner.py" />
         <option value="$PROJECT_DIR$/tutofea.py" />
-        <option value="$PROJECT_DIR$/pipeline_release.py" />
         <option value="$PROJECT_DIR$/chrono_utils.py" />
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/reconstruct_shape.py" />
+        <option value="$PROJECT_DIR$/sleeve_shellreissner.py" />
+        <option value="$PROJECT_DIR$/energy.py" />
+        <option value="$PROJECT_DIR$/shapeopt_force.py" />
+        <option value="$PROJECT_DIR$/sim_force.py" />
+        <option value="$PROJECT_DIR$/cloth_simulation.py" />
+        <option value="$PROJECT_DIR$/edge_neighbourhood.py" />
+        <option value="$PROJECT_DIR$/shape_energy.py" />
+        <option value="$PROJECT_DIR$/geo.py" />
+        <option value="$PROJECT_DIR$/pipeline_release.py" />
+        <option value="$PROJECT_DIR$/gen_cylinder.py" />
+        <option value="$PROJECT_DIR$/reconstruct_shape_energy.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1739" />
-    <option name="y" value="-18" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-1730" />
+    <option name="y" value="79" />
     <option name="width" value="1318" />
     <option name="height" value="1057" />
   </component>
@@ -293,7 +277,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.reconstruct_shape">
+  <component name="RunManager" selected="Python.reconstruct_shape_energy">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="chrono" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -316,23 +300,19 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pipeline" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="energy" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="chrono" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-        <env name="LD_LIBRARY_PATH" value="/usr/local/bin" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pipeline.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\seb\Documents\SmartSensotics\chrono\reconstruct_shape_energy.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
@@ -368,7 +348,26 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/reconstruct_shape.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\seb\Documents\SmartSensotics\chrono\reconstruct_shape_naive.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="reconstruct_shape_energy" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="chrono" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/reconstruct_shape_energy.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -399,40 +398,21 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="tutofea" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="chrono" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tutofea.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.cloth_simulation" />
       <item itemvalue="Python.test" />
-      <item itemvalue="Python.pipeline" />
       <item itemvalue="Python.pipeline_release" />
-      <item itemvalue="Python.tutofea" />
       <item itemvalue="Python.reconstruct_shape" />
+      <item itemvalue="Python.energy" />
+      <item itemvalue="Python.reconstruct_shape_energy" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.reconstruct_shape_energy" />
+        <item itemvalue="Python.pipeline_release" />
+        <item itemvalue="Python.energy" />
         <item itemvalue="Python.reconstruct_shape" />
         <item itemvalue="Python.test" />
-        <item itemvalue="Python.pipeline_release" />
-        <item itemvalue="Python.tutofea" />
-        <item itemvalue="Python.pipeline" />
       </list>
     </recent_temporary>
   </component>
@@ -463,24 +443,23 @@
       <workItem from="1556022587068" duration="17486000" />
       <workItem from="1556114820479" duration="1844000" />
       <workItem from="1556201148793" duration="4806000" />
-      <workItem from="1556546025054" duration="23714000" />
+      <workItem from="1556546025054" duration="70915000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="286274000" />
+    <option name="totallyTimeSpent" value="333475000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-6" width="1936" height="1066" extended-state="6" />
-    <editor active="true" />
+    <frame x="-1730" y="79" width="1318" height="1057" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14605543" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.14605543" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3290461" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.2636656" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39871383" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.34405145" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -489,7 +468,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32917964" />
-      <window_info anchor="bottom" id="Python Console" order="12" visible="true" weight="0.24330118" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="12" visible="true" weight="0.31493506" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -504,7 +483,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3290461" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.2636656" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39871383" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.34405145" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -513,13 +492,13 @@
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32917964" />
-      <window_info anchor="bottom" id="Python Console" order="12" visible="true" weight="0.24330118" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="12" visible="true" weight="0.46623793" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="SciView" order="3" weight="0.32995737" />
       <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="right" x="0" y="0" width="434" height="896" id="Documentation" order="5" side_tool="true" visible="true" weight="0.06823028" />
+      <window_info anchor="right" x="0" y="0" width="434" height="896" id="Documentation" order="5" side_tool="true" weight="0.06823028" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -527,7 +506,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/chrono$pipeline_release.coverage" NAME="pipeline_release Coverage Results" MODIFIED="1556640784429" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/chrono$cloth_simulation.coverage" NAME="cloth_simulation Coverage Results" MODIFIED="1556797002335" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/chrono$test.coverage" NAME="test Coverage Results" MODIFIED="1556788486838" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/chrono$reconstruct_shape_energy.coverage" NAME="reconstruct_shape_energy Coverage Results" MODIFIED="1556888501206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/tutorials/tuto3.py" />
@@ -538,13 +519,6 @@
     <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/pychrono/fea.py" />
     <entry file="file://$PROJECT_DIR$/cloth_simulation_chrono_source.py" />
     <entry file="file://$PROJECT_DIR$/load.py" />
-    <entry file="file://$PROJECT_DIR$/sleeve_brick.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16">
-          <caret line="66" column="55" selection-start-line="66" selection-start-column="28" selection-end-line="66" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/numpy/linalg/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -569,13 +543,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_bundle/pydev_umd.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="206">
@@ -591,16 +558,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sim_force.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="145" selection-start-line="145" selection-end-line="145" />
-          <folding>
-            <element signature="e#346#376#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/IPython/core/interactiveshell.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="660">
@@ -608,78 +565,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cloth_simulation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="88" column="28" selection-start-line="88" selection-start-column="28" selection-end-line="88" selection-end-column="28" />
-          <folding>
-            <element signature="e#309#339#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/geo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="94" selection-start-line="94" selection-end-line="94" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shapeopt_force.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/core.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
           <caret line="7841" column="81" selection-start-line="7841" selection-start-column="79" selection-end-line="7841" selection-end-column="81" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/irrlicht.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="6275" column="8" selection-start-line="6275" selection-start-column="8" selection-end-line="6275" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tutofea.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="39" column="12" selection-start-line="39" selection-start-column="12" selection-end-line="39" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chrono_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="545">
-          <caret line="162" column="17" selection-start-line="162" selection-start-column="17" selection-end-line="162" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gen_cylinder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1088">
-          <caret line="4" column="16" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sleeve_shellreissner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1248">
-          <caret line="111" column="42" lean-forward="true" selection-start-line="82" selection-start-column="8" selection-end-line="111" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -693,26 +582,30 @@
     <entry file="file://$PROJECT_DIR$/pipeline.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="723">
-          <caret line="106" column="28" lean-forward="true" selection-start-line="106" selection-start-column="28" selection-end-line="106" selection-end-column="28" />
+          <caret line="106" column="28" selection-start-line="106" selection-start-column="28" selection-end-line="106" selection-end-column="28" />
           <folding>
             <element signature="e#745#775#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pipeline_release.py">
+    <entry file="file://$PROJECT_DIR$/tutofea.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="54" column="66" lean-forward="true" selection-start-line="54" selection-start-column="66" selection-end-line="55" selection-end-column="32" />
-          <folding>
-            <element signature="e#745#763#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-988">
+          <caret line="39" column="12" selection-start-line="39" selection-start-column="12" selection-end-line="39" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/reconstruct_shape.py">
+    <entry file="file://$PROJECT_DIR$/sleeve_brick.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
+        <state relative-caret-position="16">
+          <caret line="66" column="55" selection-start-line="66" selection-start-column="28" selection-end-line="66" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/reconstruct_shape_naive.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2850">
           <caret line="192" column="34" selection-start-line="192" selection-start-column="34" selection-end-line="192" selection-end-column="34" />
           <folding>
             <element signature="e#309#339#0" expanded="true" />
@@ -720,12 +613,155 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
+    <entry file="file://$PROJECT_DIR$/cloth_simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="60" column="6" lean-forward="true" selection-start-line="60" selection-start-column="6" selection-end-line="60" selection-end-column="6" />
+        <state relative-caret-position="-1152">
+          <caret line="123" column="51" selection-start-line="123" selection-start-column="51" selection-end-line="123" selection-end-column="51" />
           <folding>
             <element signature="e#309#339#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sim_force.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2432">
+          <caret line="152" selection-start-line="152" selection-end-line="152" />
+          <folding>
+            <element signature="e#346#376#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="60" column="6" selection-start-line="60" selection-start-column="6" selection-end-line="60" selection-end-column="6" />
+          <folding>
+            <element signature="e#309#339#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shapeopt_force.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/edge_neighbourhood.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1120">
+          <caret line="70" column="11" selection-start-line="70" selection-start-column="11" selection-end-line="70" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/python_stubs/1888838950/numpy/core/_multiarray_umath.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-568">
+          <caret line="195" column="4" selection-start-line="195" selection-start-column="4" selection-end-line="195" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/numpy/core/fromnumeric.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56">
+          <caret line="197" column="4" selection-start-line="197" selection-start-column="4" selection-end-line="197" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sleeve_shellreissner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="147" column="26" selection-start-line="147" selection-start-column="13" selection-end-line="147" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/scipy/optimize/optimize.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="919" column="28" selection-start-line="919" selection-start-column="24" selection-end-line="919" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/python_stubs/1888838950/math.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="378" column="4" selection-start-line="378" selection-start-column="4" selection-end-line="378" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chrono_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-340">
+          <caret line="73" column="4" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Miniconda3/Lib/site-packages/pychrono/irrlicht.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="6277" column="135" selection-start-line="6277" selection-start-column="122" selection-end-line="6277" selection-end-column="135" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipeline_release.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="310" column="28" selection-start-line="310" selection-start-column="28" selection-end-line="310" selection-end-column="28" />
+          <folding>
+            <element signature="e#644#662#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shape_energy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/geo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="79" selection-start-line="79" selection-end-line="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gen_cylinder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="24" column="4" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/reconstruct_shape_energy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>

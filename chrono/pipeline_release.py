@@ -1,11 +1,11 @@
 # ------------------------------------------------------------------------------
 # Name:        Cloth Simulation
 # Purpose: Create a pipeline that:
-# # 1. Load and display the target shape (like a rigid cylinder, load an .STL file)
-# # 2. Create and display the textile shape that is gonna wrap the target shape
-# # 3. Apply the physical simulation of the textile on the target shape
-# # 4. Once stabilized, the textile shape become the target shape
-# # 5. Apply the force direct algorithm to estimate the target shape with a new textile shape
+# # 1. Load and display the shape (mesh defined as .obj file)
+# # 2. Create the textile sleeve draping the shape
+# # 3. Physical simulation of the sleeve draping the cone +
+# #    downsampling to match the number of sensors --> save picture
+# # 4. shape optimisation simulation --> save picture
 #
 # Author:      Sebastien Richoz
 #
@@ -18,7 +18,6 @@ import pychrono.core as chrono
 import pychrono.fea as fea
 import pychrono.irrlicht as chronoirr
 import pychrono.mkl as mkl
-from math import pi as PI
 from sleeve_shellreissner import SleeveShellReissner
 import chrono_utils as tool
 from gen_cylinder import gen_cylinder, downsample
@@ -26,50 +25,46 @@ from shapeopt_force import shapeopt_force
 import math
 import geo
 
-print("Cloth Simulation: Pipeline for the smartsensotics project")
+print("Cloth Simulation: Physical (pink) and optimisation (green) simulations")
 
 # Change this path to asset path, if running from other working dir.
 # It must point to the data folder, containing GUI assets (textures, fonts, meshes, etc.)
 chrono.SetChronoDataPath("../data/")
 
-# Set global variables
-
-# Number of real sensors
+# Global -- Changeable setup
+NEIGHBOURS = 4
+SAVE_VIDEO = False
+# Shape
+SHAPE_PATH = 'shapes/printed_April18/Cone_32.obj'
+# Sleeve
 NSENSORS_ANGLE = 8
 NSENSORS_LENGTH = 8
-# number of nodes in the circumference of the sleeve, equals to number of edges
 NNODES_ANGLE = NSENSORS_ANGLE * 2  # Must be a multiple of NSENSOR
-# number of nodes in the  length of the sleeve, equals to the number of rings
 NNODES_LENGTH = 2 + NSENSORS_LENGTH * 2  # Must be a multiple of NSENSOR
-# SHAPE_PATH = 'shapes/printed_April18/C_31.obj'
-SHAPE_PATH = 'shapes/printed_April18/Cone_32.obj'
-#SHAPE_PATH = 'shapes/printed_April18/E_40_25.obj'
-filename = SHAPE_PATH.split('/')[-1].split('.')[0]
-SAVE_VIDEO = False
 
-SET_MATERIAL = False  # If True, will set a skin material property to the target shape (rigid body)
-
+# Global -- Better not change
+SET_MATERIAL = False  # If True, will set a skin material property to the shape (rigid body)
 UNIT_FACTOR = 0.01
 factor_min_radius = 0.7
 metrics = ['mm', 'cm', 'dm', 'm']
 metric = metrics[int(math.fabs(round(math.log(UNIT_FACTOR, 10))))]
+filename = SHAPE_PATH.split('/')[-1].split('.')[0]
 HUMAN_DENSITY = 198.5  # Dkg/m^3
+
 # ---------------------------------------------------------------------
-#
+# CHRONO SETUP
 # Create the simulation system and add items
 mysystem = chrono.ChSystemSMC()
+mysystem.Set_G_acc(chrono.ChVectorD(0., 0., 0.))  # Remove gravity
 contact_method = chrono.ChMaterialSurface.SMC
 
-mysystem.Set_G_acc(chrono.ChVectorD(0., 0., 0.))
-
-# Set the global collision margins. This is especially important for very large or
-# very small objects. Set this before creating shapes. Not before creating mysystem.
+# Set global collision margins
 chrono.ChCollisionModel.SetDefaultSuggestedEnvelope(0.0001)
 chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.0001)
 
 # ---------------------------------------------------------------------
-#
-# Load and display the target shape
+# SHAPE
+# Load and display the shape
 
 # Change the millimeters units into meters
 filepath = tool.obj_from_millimeter(chrono.GetChronoDataPath() + SHAPE_PATH, UNIT_FACTOR, f"_{metric}")
@@ -85,6 +80,8 @@ bbmin, bbmax = eval(str(bbmin)), eval(str(bbmax))
 bb_dx = bbmax[0] - bbmin[0]
 bb_dy = bbmax[1] - bbmin[1]
 bb_dz = bbmax[2] - bbmin[2]
+min_radius = tool.get_shape_min_radius(SHAPE_PATH, bb_dx, bb_dy) * UNIT_FACTOR
+offset = 0.02 * bb_dz
 shape.SetMass(100 * HUMAN_DENSITY * bb_dx * bb_dy * bb_dz)
 
 # Align shape to the center of axis system
@@ -95,18 +92,16 @@ shape.SyncCollisionModels()
 mysystem.Add(shape)
 
 # ---------------------------------------------------------------------
-#
+# DISKS TO FIX THE SLEEVE
 # Add fixed extremities to the shape in order to fix the future mesh.
-min_radius = tool.get_shape_min_radius(SHAPE_PATH, bb_dx, bb_dy) * UNIT_FACTOR
-offset = 0.02 * bb_dz
 left_cyl, right_cyl = tool.build_external_cylinder(factor_min_radius * min_radius, bb_dz,
                                                    HUMAN_DENSITY, contact_method, offset)
 mysystem.Add(left_cyl)
 mysystem.Add(right_cyl)
+
 # ---------------------------------------------------------------------
-#
+# SLEEVE
 # Create the wrapping sleeve.
-print("Create the wrapping sleeve")
 
 # Create the material property of the mesh
 rho = 152.2  # 152.2 material density
@@ -122,7 +117,7 @@ cloth_radius = factor_min_radius * min_radius
 node_mass = 0.1
 sleeve_thickness = 0.015
 alphadamp = 0.05
-sleeve = SleeveShellReissner(cloth_length, cloth_radius, NNODES_ANGLE, NNODES_LENGTH,
+sleeve = SleeveShellReissner(cloth_length, cloth_radius, NNODES_ANGLE, NNODES_LENGTH, NEIGHBOURS,
                              cloth_material, node_mass, sleeve_thickness, alphadamp,
                              shift_z=-bb_dz / 2. - offset)
 
@@ -141,41 +136,21 @@ cloth_mesh.AddContactSurface(mcontact)
 mcontact.AddFacesFromBoundary(sphere_swept_thickness)
 mcontact.SetMaterialSurface(contact_material)
 
-# The extremities of the sleeve should be at the same level of the external disks
 # Fix the extremities of the sleeve to the disks
 sleeve.fix_extremities(left_cyl, right_cyl, mysystem)
 
 # Extend the sleeve. It will be released after some iterations.
-# sleeve.expand_to_bb(bb_dx, bb_dy)
 # TODO check for a generic way of computing the expanding force
 sleeve.expand(1 / (NNODES_ANGLE * NNODES_LENGTH) * 7000000. * UNIT_FACTOR * bb_dx)
 
 # ---------------------------------------------------------------------
-# FORCE DIRECT: Prepare the shapes for inverse modelling
+# OPTIMISATION SETUP
+# Prepare the visualization of the optimisation algorithm
 
-# Will contain the target shape computed by the physical simulation
-rigid_mesh = fea.ChMesh()
+# Mesh computed by the physical simulation
+target_mesh = fea.ChMesh()
 # The mesh that will approximate the target mesh
-cloth_mesh_apx = fea.ChMesh()
-
-# TEST track path of nodes
-# The path of the optimised mesh
-# opt_path = chrono.ChBody()
-# opt_path.SetBodyFixed(True)
-# mysystem.Add(opt_path)
-
-# TEST track path of nodes with ChBodyEasySphere()
-# nss = []
-# pps = []
-# for i in range(NSENSORS_LENGTH):
-#     for j in range(NSENSORS_ANGLE):
-#         ns = chrono.ChBodyEasySphere(0.01, 1., False, True)
-#         ns.SetBodyFixed(True)
-#         ps = chrono.ChPointPointSegment()
-#         ps.SetColor(chrono.ChColor(1.,0.,0.))
-#         ns.AddAsset(ps)
-#         nss.append(ns)
-#         mysystem.Add(ns)
+inf_mesh = fea.ChMesh()
 
 # # ---------------------------------------------------------------------
 # # VISUALIZATION
@@ -185,65 +160,56 @@ mvisualizeClothcoll.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_
 mvisualizeClothcoll.SetSymbolsThickness(1. * UNIT_FACTOR)
 #cloth_mesh.AddAsset(mvisualizeClothcoll)
 
-viz_cloth = fea.ChVisualizationFEAmesh(cloth_mesh_apx)
+viz_cloth = fea.ChVisualizationFEAmesh(inf_mesh)
 viz_cloth.SetWireframe(True)
 viz_cloth.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
 viz_cloth.SetFEMdataType(fea.ChVisualizationFEAmesh.E_PLOT_NONE)
 viz_cloth.SetSymbolsThickness(0.005)
 # viz_cloth.SetDefaultSymbolsColor(chrono.ChColor(0.2,0.3,0.2))  # TODO bug lib
 # viz_cloth.SetDefaultMeshColor(chrono.ChColor(0.2,0.3,0.2))  # TODO bug lib
-cloth_mesh_apx.AddAsset(viz_cloth)
+inf_mesh.AddAsset(viz_cloth)
 
-viz_rigid_mesh = fea.ChVisualizationFEAmesh(rigid_mesh)
+viz_rigid_mesh = fea.ChVisualizationFEAmesh(target_mesh)
 viz_rigid_mesh.SetFEMglyphType(fea.ChVisualizationFEAmesh.E_GLYPH_NODE_DOT_POS)
 viz_rigid_mesh.SetSymbolsThickness(2. * UNIT_FACTOR)
 # viz_rigid_mesh.SetDefaultSymbolsColor(chrono.ChColor(0.2, 0.2, 0.2))  # TODO bug lib
-rigid_mesh.AddAsset(viz_rigid_mesh)
+target_mesh.AddAsset(viz_rigid_mesh)
 
-viz_rigid_mesh_beam = fea.ChVisualizationFEAmesh(rigid_mesh)
+viz_rigid_mesh_beam = fea.ChVisualizationFEAmesh(target_mesh)
 viz_rigid_mesh_beam.SetFEMdataType(fea.ChVisualizationFEAmesh.E_PLOT_ELEM_BEAM_MZ)
 viz_rigid_mesh_beam.SetColorscaleMinMax(-0.4, 0.4)
 viz_rigid_mesh_beam.SetSmoothFaces(True)
 viz_rigid_mesh_beam.SetWireframe(False)
-rigid_mesh.AddAsset(viz_rigid_mesh_beam)
+target_mesh.AddAsset(viz_rigid_mesh_beam)
 
 # Add mesh to the system
 # cloth_mesh.SetAutomaticGravity(False)
 mysystem.AddMesh(cloth_mesh)
-mysystem.AddMesh(cloth_mesh_apx)
-mysystem.AddMesh(rigid_mesh)
+mysystem.AddMesh(inf_mesh)
+mysystem.AddMesh(target_mesh)
 #
 # ---------------------------------------------------------------------
 # IRRLICHT
 # Create an Irrlicht application to visualize the system
 #
 myapplication = chronoirr.ChIrrApp(mysystem, 'Cloth Simulation', chronoirr.dimension2du(1920, 1080))
-# myapplication.AddTypicalLogo(chrono.GetChronoDataPath() + 'logo_pychrono_alpha.png')
 myapplication.AddTypicalSky(chrono.GetChronoDataPath() + 'skybox2/')
-#myapplication.AddTypicalCamera(chronoirr.vector3df(bb_dz / 1.4, bb_dy/5., bb_dz / 1.4))
 myapplication.AddTypicalCamera(chronoirr.vector3df(bb_dz/1.2, 0., 0.))
 myapplication.AddTypicalLights()
-# myapplication.AddTypicalLights(chronoirr.vector3df(2*bb_dz, 2*bb_dz, 2*bb_dz))
 myapplication.SetPlotCollisionShapes(False)
 myapplication.SetPlotCOGFrames(False)  # display coord system
 myapplication.SetPlotAABB(False)
 myapplication.SetShowInfos(False)
 
-# ==IMPORTANT!== Use this function for adding a ChIrrNodeAsset to all items
-# in the system. These ChIrrNodeAsset assets are 'proxies' to the Irrlicht meshes.
-# If you need a finer control on which item really needs a visualization proxy in
-# Irrlicht, just use application.AssetBind(myitem) on a per-item basis.
+# ==IMPORTANT!== for Irrlicht to work
 myapplication.AssetBindAll()
-
-# ==IMPORTANT!== Use this function for 'converting' into Irrlicht meshes the assets
-# that you added to the bodies into 3D shapes, they can be visualized by Irrlicht!
 myapplication.AssetUpdateAll()
 mysystem.SetupInitial()
 
 # ---------------------------------------------------------------------
 # SIMULATION
 # Run the simulation
-#
+
 # Change the solver form the default SOR to the MKL Pardiso, more precise for fea.
 msolver = mkl.ChSolverMKLcsm()
 mysystem.SetSolver(msolver)
@@ -266,6 +232,7 @@ current_cloth_nodes_pos = []
 
 # Save first image
 myapplication.SetVideoframeSave(True)
+
 while myapplication.GetDevice().run():
     print('step', step)
     myapplication.BeginScene()
@@ -306,6 +273,7 @@ while myapplication.GetDevice().run():
         if mean_sd < threshold:
 
             myapplication.SetVideoframeSave(True)
+
             # Freeze the mesh
             sleeve.freeze()
 
@@ -330,21 +298,18 @@ while myapplication.GetDevice().run():
             for tn in target_nodes:
                 fea_node = fea.ChNodeFEAxyzrot(chrono.ChFrameD(chrono.ChVectorD(tn[0], tn[1], tn[2]), noderot))
                 fea_nodes.append(fea_node)
-                rigid_mesh.AddNode(fea_node)
-            # Visualize the target edges
-            #tool.viz_target_edges(rigid_mesh, fea_nodes, target_edges)
+                target_mesh.AddNode(fea_node)
 
             # Generate the optimised shape (cloth)
-            cloth_nodes, cloth_edges = gen_cylinder(bb_dx, bb_dz,
-                                                    NSENSORS_ANGLE, NSENSORS_LENGTH,
-                                                    shift_z=-bb_dz / 2.)
+            cloth_nodes, cloth_edges = gen_cylinder(bb_dx, bb_dz, NSENSORS_ANGLE, NSENSORS_LENGTH,
+                                                    NEIGHBOURS, shift_z=-bb_dz / 2.)
             current_cloth_nodes_pos = cloth_nodes.copy()
 
             # Initial position of the nodes to optimize
             for i, cn in enumerate(cloth_nodes):
                 fea_node = fea.ChNodeFEAxyzD(chrono.ChVectorD(cn[0], cn[1], cn[2]))
                 fea_node.SetMass(node_mass)
-                cloth_mesh_apx.AddNode(fea_node)
+                inf_mesh.AddNode(fea_node)
 
             is_inverse_modeling = True
             is_detecting_stab = False
@@ -356,7 +321,7 @@ while myapplication.GetDevice().run():
         if im_step > 0:
             #myapplication.SetVideoframeSave(False)
 
-            print("inverse modelling")
+            print("Optimisation algorithm")
             # Apply the force optimization algorithm and visualize each iteration
             updated_nodes_pos, fvall = shapeopt_force(current_cloth_nodes_pos, cloth_edges,
                                                       target_nodes, target_edges)
@@ -365,12 +330,8 @@ while myapplication.GetDevice().run():
             # Move optimised shape aside to compare shapes with the target shape
             opt_path_shape = chrono.ChPathShape()
             for i, (un, cn) in enumerate(zip(updated_nodes_pos, current_cloth_nodes_pos)):
-                cloth_mesh_apx.AddNode(
+                inf_mesh.AddNode(
                     fea.ChNodeFEAxyzD(chrono.ChVectorD(un[0], un[1], un[2])))
-                dr = myapplication.GetVideoDriver()
-                dr.draw3DLine(chronoirr.vector3df(cn[0], cn[1], cn[2]),
-                              chronoirr.vector3df(un[0], un[1], un[2]),
-                              chronoirr.SColor(255, 255, 0, 0))
                 # chronoirr.IVideoDriver.draw3DLine(myapplication.GetVideoDriver(),
                 #                                   chronoirr.vector3df(cn[0] - (1.1 * bb_dx), cn[1], cn[2]),
                 #                                   chronoirr.vector3df(un[0] - (1.1 * bb_dx), un[1], un[2]),

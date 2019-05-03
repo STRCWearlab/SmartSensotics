@@ -1,9 +1,10 @@
 import math
 import numpy as np
+from edge_neighbourhood import edge_neighbourhood
 
 
-def gen_cylinder(radius, length, na, nl,
-                 shift_x=0, shift_y=0, shift_z=0):
+def gen_cylinder(radius, length, na, nl, neighbours,
+                 shift_x=0., shift_y=0., shift_z=0.):
     """
     Generate a 3D cylinder made of na nodes in the circumference and nl nodes in the length
 
@@ -13,6 +14,7 @@ def gen_cylinder(radius, length, na, nl,
     :param length: length of the cylinder
     :param na: number of nodes in the circumference
     :param nl: number of nodes in the length
+    :param neighbours: number of neighbours (2,4,6,8)
     :return: (nodes, edges) where 'nodes' is a matrix of Nx3 where N is the number of nodes with x,y,z coordinates and
     'edges' is a matrix of Nx4 indicating the neighbourhood for each node of 'nodes'. Set -1 if no neighbour.
     an edge is defined as [left_node, next_angle_node, previous_angle_node, right_node]
@@ -40,31 +42,7 @@ def gen_cylinder(radius, length, na, nl,
             nodes.append([x, y, cl])
 
             # Make edges
-            # [left_node, next_angle_node, right_node, previous_angle_node]
-            e = [-1] * 4
-
-            # Link left
-            if i > 0:
-                e[0] = nidx - na
-                # e[0] = na * (i - 1) + j
-            # link right
-            if i < nl - 1:
-                e[2] = nidx + na
-                # e[2] = na * (i + 1) + j
-            # link to previous angle
-            if j > 0:
-                e[3] = nidx - 1
-                # e[3] = na * i + j - 1
-            else:
-                e[3] = nidx + (na - 1)
-                # e[3] = na * (i + 1) - 1
-            # link to next angle
-            if j < na - 1:
-                e[1] = nidx + 1
-                # e[1] = na * i + j + 1
-            else:
-                e[1] = nidx - (na - 1)
-
+            e = edge_neighbourhood(neighbours, nidx, j, i, na, nl)
             edges.append(e)
             nidx += 1
 

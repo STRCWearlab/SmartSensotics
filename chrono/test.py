@@ -12,7 +12,7 @@ import pychrono.core as chrono
 import pychrono.fea as fea
 import pychrono.irrlicht as chronoirr
 import pychrono.mkl as mkl
-from reconstruct_shape import reconstruct_shape
+from reconstruct_shape_naive import reconstruct_shape
 import chrono_utils as tool
 import math
 # Change this path to asset path, if running from other working dir.

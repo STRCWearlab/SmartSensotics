@@ -25,7 +25,7 @@ class SleeveShellReissner:
     shift_x = 0
     shift_y = 0
 
-    def __init__(self, length, radius, na=MIN_NA, nl=MIN_NL, material=None,
+    def __init__(self, length, radius, neighbours, na=MIN_NA, nl=MIN_NL, material=None,
                  node_mass=10., sleeve_thickness=0.002, alphadamp=0.1,
                  shift_x=0, shift_y=0, shift_z=0):
         """
@@ -34,6 +34,7 @@ class SleeveShellReissner:
 
         :param length: the length of the sleeve
         :param radius: the radius of the sleeve
+        :param neighbours: Number of neighbours
         :param na: number of nodes in the circumference
         :param nl: number of nodes in the length
         :param material: a fea.ChMaterialShellReissner material property of the mesh
@@ -64,7 +65,7 @@ class SleeveShellReissner:
         self.shift_y = shift_y
 
         # Create the nodes and edges
-        self.nodes, self.edges = gen_cylinder.gen_cylinder(radius, length, na, nl,
+        self.nodes, self.edges = gen_cylinder.gen_cylinder(radius, length, na, nl, neighbours,
                                                            shift_x, shift_y, shift_z)
 
         # Create the mesh made of nodes and elements
