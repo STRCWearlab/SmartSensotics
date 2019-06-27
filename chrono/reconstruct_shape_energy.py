@@ -182,7 +182,7 @@ with open(f"./../data/reconstruction/{filename}_inf_{method}.txt", 'w') as f:
 # Create an Irrlicht application to visualize the system
 #
 myapplication = chronoirr.ChIrrApp(mysystem, 'Reconstruction shape',
-                                   chronoirr.dimension2du(1920, 1080))
+                                   chronoirr.dimension2du(720, 540))
 myapplication.AddTypicalSky(chrono.GetChronoDataPath() + 'skybox2/')
 myapplication.AddTypicalCamera(chronoirr.vector3df(1.3*bb_dz, 0., 0.))
 myapplication.AddTypicalLights()
@@ -204,7 +204,7 @@ myapplication.SetTimestep(0.0001)
 
 step = 0
 save_at = 2
-myapplication.SetVideoframeSave(True)
+myapplication.SetVideoframeSave(False)
 inf_mesh_big.AddNode(fea.ChNodeFEAxyz(chrono.ChVectorD(100., 0., 0.)))  # hack to fix issue with doStep
 while myapplication.GetDevice().run():
     print('step', step)
@@ -215,12 +215,12 @@ while myapplication.GetDevice().run():
         myapplication.SetVideoframeSave(False)
         # shape.SetPos(chrono.ChVectorD(100.,0.,0.))  # hack to hide cone
 
-    if step > save_at and step < len(nodes_inf_all) + save_at:
-        for ring in range(N_RINGS):
-            nodes3d = np.reshape(nodes_inf_all[ring][step - save_at], (int(len(nodes_inf_all[ring][step - save_at]) / 3), 3))
-            for n3 in nodes3d:
-                fn3 = fea.ChNodeFEAxyz(tool.make_ChVectorD(n3))
-                inf_mesh.AddNode(fn3)
+    #if step > save_at and step < len(nodes_inf_all) + save_at:
+    #    for ring in range(N_RINGS):
+    #        nodes3d = np.reshape(nodes_inf_all[ring][step - save_at], (int(len(nodes_inf_all[ring][step - save_at]) / 3), 3))
+    #        for n3 in nodes3d:
+    #            fn3 = fea.ChNodeFEAxyz(tool.make_ChVectorD(n3))
+    #            inf_mesh.AddNode(fn3)
 
     if step == len(nodes_inf_all) + save_at + 1:
         for ni in nodes_inf:
